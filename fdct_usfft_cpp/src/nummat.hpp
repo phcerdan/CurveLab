@@ -68,17 +68,17 @@ class NumMat {
   void resize(int m, int n) {
     if (_m != m || _n != n) {
       if (_m > 0 && _n > 0) {
-	delete[] _data;
-	_data = NULL;
+        delete[] _data;
+        _data = NULL;
       }
       _m = m;
       _n = n;
       if (_m > 0 && _n > 0) {
-	_data = new F[_m * _n];
-	assert(_data != NULL);
-	memset(_data, 0, _m * _n * sizeof(F));
+        _data = new F[_m * _n];
+        assert(_data != NULL);
+        memset(_data, 0, _m * _n * sizeof(F));
       } else
-	_data = NULL;
+        _data = NULL;
     }
   }
   const F& operator()(int i, int j) const {

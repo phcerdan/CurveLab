@@ -6,25 +6,25 @@
 #ifndef _FDCT_USFFT_INC_HPP_
 #define _FDCT_USFFT_INC_HPP_
 
-#include <iostream>
 #include <fstream>
+#include <iostream>
 #include <sstream>
 
-#include <cfloat>
 #include <cassert>
+#include <cfloat>
 #include <cmath>
-#include <string>
 #include <complex>
+#include <string>
 
-#include <vector>
-#include <set>
-#include <map>
-#include <deque>
-#include <queue>
-#include <utility>
-#include <algorithm>
 #include <string.h>
-//FFT stuff
+#include <algorithm>
+#include <deque>
+#include <map>
+#include <queue>
+#include <set>
+#include <utility>
+#include <vector>
+// FFT stuff
 #include "fftw.h"
 
 #define FDCT_USFFT_NS_BEGIN_NAMESPACE namespace fdct_usfft_ns {
@@ -34,8 +34,11 @@ FDCT_USFFT_NS_BEGIN_NAMESPACE
 
 typedef std::complex<double> cpx;
 
-//AUX functions
-inline int pow2(int l) { assert(l>=0); return (1<<l); }
+// AUX functions
+inline int pow2(int l) {
+  assert(l >= 0);
+  return (1 << l);
+}
 
 FDCT_USFFT_NS_END_NAMESPACE
 
