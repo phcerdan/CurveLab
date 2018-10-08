@@ -6,27 +6,27 @@
 #ifndef _FDCT_WRAPPING_INC_HPP_
 #define _FDCT_WRAPPING_INC_HPP_
 
-//STL stuff
-#include <iostream>
+// STL stuff
 #include <fstream>
+#include <iostream>
 #include <sstream>
 
-#include <cfloat>
 #include <cassert>
+#include <cfloat>
 #include <cmath>
-#include <string>
 #include <complex>
+#include <string>
 
-#include <vector>
-#include <set>
-#include <map>
-#include <deque>
-#include <queue>
-#include <utility>
 #include <algorithm>
-//using namespace std;
+#include <deque>
+#include <map>
+#include <queue>
+#include <set>
+#include <utility>
+#include <vector>
+// using namespace std;
 #include <string.h>
-//FFT stuff
+// FFT stuff
 #include "fftw.h"
 
 #define FDCT_WRAPPING_NS_BEGIN_NAMESPACE namespace fdct_wrapping_ns {
@@ -34,11 +34,14 @@
 
 FDCT_WRAPPING_NS_BEGIN_NAMESPACE
 
-//Complex number
+// Complex number
 typedef std::complex<double> cpx;
 
-//AUX functions
-inline int pow2(int l) { assert(l>=0); return (1<<l); }
+// AUX functions
+inline int pow2(int l) {
+  assert(l >= 0);
+  return (1 << l);
+}
 
 FDCT_WRAPPING_NS_END_NAMESPACE
 
