@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 3.5)
+project(CurveLab)
+find_package(FFTW3 REQUIRED)
+add_executable(exeName exeName.cpp)
+#target_link_libraries(exeName) )
