@@ -65,7 +65,7 @@ CpxNumTns& CpxCrvletOcr::block(int s, int w) {
         }
       char tmp[100];
       sprintf(tmp, "%s_%d_%d.dat", _name, si, wi);
-      ofstream fout(tmp);
+      std::ofstream fout(tmp);
       fout.write((char*)(_blocks[si][wi].data()), _szvec[si][wi] * sizeof(cpx));
       fout.close();
 

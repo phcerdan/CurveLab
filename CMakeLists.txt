@@ -36,6 +36,7 @@ endif()
 add_subdirectory(fdct3d)
 add_subdirectory(fdct_usfft_cpp)
 add_subdirectory(fdct_wrapping_cpp)
+add_subdirectory(fdct3d_outcore)
 
 # WIP, PETSc not working
 # Set PETSC_DIR pointing to base directory
