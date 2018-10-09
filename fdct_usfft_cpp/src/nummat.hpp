@@ -8,10 +8,6 @@
 
 #include "fdct_usfft_inc.hpp"
 
-using std::ios_base;
-using std::istream;
-using std::ostream;
-
 FDCT_USFFT_NS_BEGIN_NAMESPACE
 
 //-------------------------------------------------
@@ -96,7 +92,7 @@ class NumMat {
 
 // INPUT
 template <class F>
-inline istream& operator>>(istream& is, NumMat<F>& mat) {
+inline std::istream& operator>>(std::istream& is, NumMat<F>& mat) {
   int m, n;
   is >> m >> n;
   mat.resize(m, n);
@@ -107,11 +103,11 @@ inline istream& operator>>(istream& is, NumMat<F>& mat) {
 
 // OUTPUT
 template <class F>
-inline ostream& operator<<(ostream& os, const NumMat<F>& mat) {
-  os << mat.m() << " " << mat.n() << endl;
+inline std::ostream& operator<<(std::ostream& os, const NumMat<F>& mat) {
+  os << mat.m() << " " << mat.n() << std::endl;
   for (int i = 0; i < mat.m(); i++) {
     for (int j = 0; j < mat.n(); j++) os << " " << mat(i, j);
-    os << endl;
+    os << std::endl;
   }
   return os;
 }
