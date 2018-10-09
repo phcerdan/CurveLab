@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.5)
 project(CurveLab)
 
+option(CurveLab_BUILD_TESTING "BUILD_TESTING for CurveLab" OFF)
+
 include(ExternalProject)
 
 message(STATUS "ExternalProject: fftw...")
@@ -26,7 +28,6 @@ set_target_properties(FFTW PROPERTIES
     INTERFACE_INCLUDE_DIRECTORIES ${fftw_install_include_dir}
     )
 
-option(CurveLab_BUILD_TESTING "BUILD_TESTING for CurveLab" OFF)
 if(CurveLab_BUILD_TESTING)
     enable_testing()
 endif()
@@ -35,3 +36,10 @@ endif()
 add_subdirectory(fdct3d)
 add_subdirectory(fdct_usfft_cpp)
 add_subdirectory(fdct_wrapping_cpp)
+
+# WIP, PETSc not working
+# Set PETSC_DIR pointing to base directory
+# option(CurveLab_USE_MPI "Use MPI, require PETSc" OFF)
+if(CurveLab_USE_MPI)
+    add_subdirectory(fdct3d_mpi)
+endif()
