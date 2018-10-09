@@ -12,18 +12,11 @@
 #include "numvec.hpp"
 #include "offmat.hpp"
 #include "offvec.hpp"
-using std::abs;
-using std::map;
-using std::max;
-using std::min;
-using std::pair;
-using std::sort;
-using std::vector;
 
 FDCT_WRAPPING_NS_BEGIN_NAMESPACE
 
 int fdct_wrapping(int N1, int N2, int nbscales, int nbangles_coarse, int ac,
-                  CpxNumMat& x, vector<vector<CpxNumMat> >& c);
+                  CpxNumMat& x, std::vector<std::vector<CpxNumMat> >& c);
 // this function performs the forward curvelet transform
 // INPUTS:
 //  N1,N2 -- the size of the input image
@@ -36,7 +29,7 @@ int fdct_wrapping(int N1, int N2, int nbscales, int nbangles_coarse, int ac,
 //  and indices (i,j) is accessed by c[s][w](i,j).
 
 int ifdct_wrapping(int N1, int N2, int nbscales, int nbangles_coarse, int ac,
-                   vector<vector<CpxNumMat> >& c, CpxNumMat& x);
+                   std::vector<std::vector<CpxNumMat> >& c, CpxNumMat& x);
 // this function performs the inverse curvelet transform
 // INPUTS:
 //  N1,N2 -- the size of the input image
@@ -49,11 +42,11 @@ int ifdct_wrapping(int N1, int N2, int nbscales, int nbangles_coarse, int ac,
 //  x -- N1 by N2 matrix stored in CpxNumMat class
 
 int fdct_wrapping_param(int N1, int N2, int nbscales, int nbangles_coarse,
-                        int ac, vector<vector<double> >& sx,
-                        vector<vector<double> >& sy,
-                        vector<vector<double> >& fx,
-                        vector<vector<double> >& fy, vector<vector<int> >& nx,
-                        vector<vector<int> >& ny);
+                        int ac, std::vector<std::vector<double> >& sx,
+                        std::vector<std::vector<double> >& sy,
+                        std::vector<std::vector<double> >& fx,
+                        std::vector<std::vector<double> >& fy, std::vector<std::vector<int> >& nx,
+                        std::vector<std::vector<int> >& ny);
 // this function obtains auxiliary information about curvelet transform
 // INPUTS:
 //  N1,N2 -- the size of the input image

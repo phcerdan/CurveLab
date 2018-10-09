@@ -15,7 +15,7 @@
 #include "offvec.hpp"
 
 int fdct3d_forward(int N1, int N2, int N3, int nbscales, int nbdstz_coarse,
-                   int ac, CpxNumTns& x, vector<vector<CpxNumTns> >& c);
+                   int ac, CpxNumTns& x, std::vector<std::vector<CpxNumTns> >& c);
 // this function performs the forward curvelet transform
 // INPUTS:
 //  N1,N2,N3 -- the size of the input data
@@ -29,7 +29,7 @@ int fdct3d_forward(int N1, int N2, int N3, int nbscales, int nbdstz_coarse,
 //  and indices (i,j,k) is accessed by c[s][w](i,j,k).
 
 int fdct3d_inverse(int N1, int N2, int N3, int nbscales, int nbdstz_coarse,
-                   int ac, vector<vector<CpxNumTns> >& c, CpxNumTns& x);
+                   int ac, std::vector<std::vector<CpxNumTns> >& c, CpxNumTns& x);
 // this function performs the inverse curvelet transform
 // INPUTS:
 //  N1,N2,N3 -- the size of the input data
@@ -43,10 +43,10 @@ int fdct3d_inverse(int N1, int N2, int N3, int nbscales, int nbdstz_coarse,
 //  x -- N1 by N2 by N3 tensor stored in CpxNumTns class
 
 int fdct3d_param(int N1, int N2, int N3, int nbscales, int nbdstz_coarse,
-                 int ac, vector<vector<double> >& fxs,
-                 vector<vector<double> >& fys, vector<vector<double> >& fzs,
-                 vector<vector<int> >& nxs, vector<vector<int> >& nys,
-                 vector<vector<int> >& nzs);
+                 int ac, std::vector<std::vector<double> >& fxs,
+                 std::vector<std::vector<double> >& fys, std::vector<std::vector<double> >& fzs,
+                 std::vector<std::vector<int> >& nxs, std::vector<std::vector<int> >& nys,
+                 std::vector<std::vector<int> >& nzs);
 // this function obtains auxiliary information about curvelet transform
 // INPUTS:
 //  N1,N2,N3 -- the size of the input data

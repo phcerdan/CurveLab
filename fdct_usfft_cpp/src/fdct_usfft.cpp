@@ -11,19 +11,19 @@ FDCT_USFFT_NS_BEGIN_NAMESPACE
 //------------------------------------
 int fdct_usfft_fftL(int N1, int N2, CpxNumMat& x, CpxOffMat& O);
 int fdct_usfft_sepscale(int N1, int N2, int nbscales, int ac, CpxOffMat& O,
-                        vector<CpxOffMat>& Xhghs);
+                        std::vector<CpxOffMat>& Xhghs);
 int fdct_usfft_sepangle(double XL1, double XL2, int nbangles, CpxOffMat& Xhgh,
-                        vector<CpxOffMat>& msc);
-int fdct_usfft_ifftS(vector<CpxOffMat>& msc, vector<CpxNumMat>& csc);
-int fdct_usfft_wavelet(CpxOffMat& Xhgh, vector<CpxNumMat>& csc);
+                        std::vector<CpxOffMat>& msc);
+int fdct_usfft_ifftS(std::vector<CpxOffMat>& msc, std::vector<CpxNumMat>& csc);
+int fdct_usfft_wavelet(CpxOffMat& Xhgh, std::vector<CpxNumMat>& csc);
 
 int fdct_usfft_1dinterp(DblNumMat& off, DblNumMat& wgt, CpxOffVec& val,
-                        CpxNumMat& res, map<int, fftw_plan>& f1map,
-                        map<int, fftw_plan>& b1map);
+                        CpxNumMat& res, std::map<int, fftw_plan>& f1map,
+                        std::map<int, fftw_plan>& b1map);
 
 //------------------------------------
 int fdct_usfft(int N1, int N2, int nbscales, int nbangles_coarse, int ac,
-               CpxNumMat& x, vector<vector<CpxNumMat> >& c) {
+               CpxNumMat& x, std::vector<std::vector<CpxNumMat> >& c) {
   assert(N1 == x.m() && N2 == x.n());
   int F1 = N1 / 2;
   int F2 = N2 / 2;
@@ -33,13 +33,13 @@ int fdct_usfft(int N1, int N2, int nbscales, int nbangles_coarse, int ac,
   fdct_usfft_fftL(N1, N2, x, O);
 
   // 2. seperate scale
-  vector<CpxOffMat> Xhghs(nbscales);
+  std::vector<CpxOffMat> Xhghs(nbscales);
   fdct_usfft_sepscale(N1, N2, nbscales, ac, O, Xhghs);
 
   // 3. work on each scale
   if (ac == 1) {
     // nbangles
-    vector<int> nbangles(nbscales);
+    std::vector<int> nbangles(nbscales);
     nbangles[0] = 1;
     for (int sc = 1; sc < nbscales; sc++)
       nbangles[sc] = nbangles_coarse * pow2(int(ceil(double(sc - 1) / 2)));
@@ -50,7 +50,7 @@ int fdct_usfft(int N1, int N2, int nbscales, int nbangles_coarse, int ac,
     double XL1 = 4.0 * N1 / 3.0;
     double XL2 = 4.0 * N2 / 3.0;  // range
     for (int sc = nbscales - 1; sc > 0; sc--) {
-      vector<CpxOffMat> msc(nbangles[sc]);
+      std::vector<CpxOffMat> msc(nbangles[sc]);
       fdct_usfft_sepangle(XL1, XL2, nbangles[sc], Xhghs[sc], msc);
       fdct_usfft_ifftS(msc, c[sc]);
       XL1 = XL1 / 2;
@@ -60,7 +60,7 @@ int fdct_usfft(int N1, int N2, int nbscales, int nbangles_coarse, int ac,
     fdct_usfft_wavelet(Xhghs[0], c[0]);
   } else {
     // nbangles
-    vector<int> nbangles(nbscales);
+    std::vector<int> nbangles(nbscales);
     nbangles[0] = 1;
     for (int sc = 1; sc < nbscales - 1; sc++)
       nbangles[sc] = nbangles_coarse * pow2(int(ceil(double(sc - 1) / 2)));
@@ -74,7 +74,7 @@ int fdct_usfft(int N1, int N2, int nbscales, int nbangles_coarse, int ac,
     double XL1 = 2.0 * N1 / 3.0;
     double XL2 = 2.0 * N2 / 3.0;  // range
     for (int sc = nbscales - 2; sc > 0; sc--) {
-      vector<CpxOffMat> msc(nbangles[sc]);
+      std::vector<CpxOffMat> msc(nbangles[sc]);
       fdct_usfft_sepangle(XL1, XL2, nbangles[sc], Xhghs[sc], msc);
       fdct_usfft_ifftS(msc, c[sc]);
       XL1 = XL1 / 2;
@@ -109,7 +109,7 @@ int fdct_usfft_fftL(int N1, int N2, CpxNumMat& x, CpxOffMat& O) {
 
 //--------------------
 int fdct_usfft_sepscale(int N1, int N2, int nbscales, int ac, CpxOffMat& O,
-                        vector<CpxOffMat>& Xhghs) {
+                        std::vector<CpxOffMat>& Xhghs) {
   //-----------------------------------------------------
   // unfold if necessary
   CpxOffMat X;
@@ -185,7 +185,7 @@ int fdct_usfft_sepscale(int N1, int N2, int nbscales, int ac, CpxOffMat& O,
                    // = X(i,j).im * lowpass(i,j);
         Xlow(i, j) = X(i, j) * lowpass(i, j);
       }
-    // set into vector
+    // set into std::vector
     Xhghs[sc] = Xhgh;
     X = Xlow;
     XL1 = XL1 / 2;
@@ -197,11 +197,11 @@ int fdct_usfft_sepscale(int N1, int N2, int nbscales, int ac, CpxOffMat& O,
 
 //--------------------
 int fdct_usfft_sepangle(double XL1, double XL2, int nbangles, CpxOffMat& Xhgh,
-                        vector<CpxOffMat>& msc) {
+                        std::vector<CpxOffMat>& msc) {
   // int XS1, XS2;  int XF1, XF2;  double XR1, XR2; fdct_usfft_rangecompute(XL1,
   // XL2, XS1, XS2, XF1, XF2, XR1, XR2);
-  map<int, fftw_plan> f1map;  // forward 1d map, IN_PLACE
-  map<int, fftw_plan> b1map;  // backward 1d map, IN_PLACE
+  std::map<int, fftw_plan> f1map;  // forward 1d map, IN_PLACE
+  std::map<int, fftw_plan> b1map;  // backward 1d map, IN_PLACE
 
   // allocate msc
   msc.resize(nbangles);
@@ -239,7 +239,7 @@ int fdct_usfft_sepangle(double XL1, double XL2, int nbangles, CpxOffMat& Xhgh,
     int xh = xn / 2;
     int yh = yn / 2;
     // allocate temporary space for tsc
-    vector<CpxOffMat> tsc(nd);
+    std::vector<CpxOffMat> tsc(nd);
     for (int w = 0; w < nd; w++) tsc[w].resize(xn, yn);
     // gather weighted samples for each wedges
     for (int xcur = xf; xcur < xe; xcur++) {  // for each line
@@ -293,12 +293,12 @@ int fdct_usfft_sepangle(double XL1, double XL2, int nbangles, CpxOffMat& Xhgh,
   XL2 = XL2b;
   assert(wcnt == nbangles);
 
-  for (map<int, fftw_plan>::iterator mit = f1map.begin(); mit != f1map.end();
+  for (std::map<int, fftw_plan>::iterator mit = f1map.begin(); mit != f1map.end();
        mit++) {
     fftw_plan p = (*mit).second;
     fftw_destroy_plan(p);
   }
-  for (map<int, fftw_plan>::iterator mit = b1map.begin(); mit != b1map.end();
+  for (std::map<int, fftw_plan>::iterator mit = b1map.begin(); mit != b1map.end();
        mit++) {
     fftw_plan p = (*mit).second;
     fftw_destroy_plan(p);
@@ -307,9 +307,9 @@ int fdct_usfft_sepangle(double XL1, double XL2, int nbangles, CpxOffMat& Xhgh,
 }
 
 //--------------------
-int fdct_usfft_ifftS(vector<CpxOffMat>& msc, vector<CpxNumMat>& csc) {
-  typedef pair<int, int> intpair;
-  map<intpair, fftwnd_plan> planmap;
+int fdct_usfft_ifftS(std::vector<CpxOffMat>& msc, std::vector<CpxNumMat>& csc) {
+  typedef std::pair<int, int> intpair;
+  std::map<intpair, fftwnd_plan> planmap;
   // do work
   csc.resize(msc.size());
   for (int w = 0; w < msc.size(); w++) {
@@ -322,7 +322,7 @@ int fdct_usfft_ifftS(vector<CpxOffMat>& msc, vector<CpxNumMat>& csc) {
     CpxNumMat tpdata(xn, yn);
     fdct_usfft_ifftshift(msc[w], tpdata);
     // fft
-    map<intpair, fftwnd_plan>::iterator mit = planmap.find(intpair(xn, yn));
+    std::map<intpair, fftwnd_plan>::iterator mit = planmap.find(intpair(xn, yn));
     fftwnd_plan p = NULL;
     if (mit != planmap.end()) {
       p = (*mit).second;
@@ -340,7 +340,7 @@ int fdct_usfft_ifftS(vector<CpxOffMat>& msc, vector<CpxNumMat>& csc) {
                       // fdct_usfft_fftshift(xn,yn,xh,yh,tpdata,csc[w]);
   }
   // delete planners
-  for (map<intpair, fftwnd_plan>::iterator mit = planmap.begin();
+  for (std::map<intpair, fftwnd_plan>::iterator mit = planmap.begin();
        mit != planmap.end(); mit++) {
     fftwnd_plan p = (*mit).second;
     fftwnd_destroy_plan(p);
@@ -349,7 +349,7 @@ int fdct_usfft_ifftS(vector<CpxOffMat>& msc, vector<CpxNumMat>& csc) {
 }
 
 //--------------------
-int fdct_usfft_wavelet(CpxOffMat& Xhgh, vector<CpxNumMat>& csc) {
+int fdct_usfft_wavelet(CpxOffMat& Xhgh, std::vector<CpxNumMat>& csc) {
   int N1 = Xhgh.m();
   int N2 = Xhgh.n();
   int F1 = -Xhgh.s();
@@ -370,14 +370,14 @@ int fdct_usfft_wavelet(CpxOffMat& Xhgh, vector<CpxNumMat>& csc) {
 
 //--------------------
 int fdct_usfft_1dinterp(DblNumMat& off, DblNumMat& wgt, CpxOffVec& val,
-                        CpxNumMat& res, map<int, fftw_plan>& f1map,
-                        map<int, fftw_plan>& b1map) {
+                        CpxNumMat& res, std::map<int, fftw_plan>& f1map,
+                        std::map<int, fftw_plan>& b1map) {
   if (off.n() <= 64) {  // SIMPLE INTERPOLATION
     //--------------------------------------------
     int N = val.m();
     int F = -val.s();
     fftw_plan fp = NULL;
-    map<int, fftw_plan>::iterator fit = f1map.find(N);
+    std::map<int, fftw_plan>::iterator fit = f1map.find(N);
     if (fit != f1map.end()) {
       fp = (*fit).second;
     } else {
@@ -385,7 +385,7 @@ int fdct_usfft_1dinterp(DblNumMat& off, DblNumMat& wgt, CpxOffVec& val,
       f1map[N] = fp;
     }
     fftw_plan bp = NULL;
-    map<int, fftw_plan>::iterator bit = b1map.find(N);
+    std::map<int, fftw_plan>::iterator bit = b1map.find(N);
     if (bit != b1map.end()) {
       bp = (*bit).second;
     } else {
@@ -408,7 +408,7 @@ int fdct_usfft_1dinterp(DblNumMat& off, DblNumMat& wgt, CpxOffVec& val,
     for (int w = 0; w < nbwedges; w++) {
       for (int k = -F; k < -F + N; k++) {
         double phase = 2.0 * M_PI * double(k) / double(N) * off(0, w);
-        fff(k) = feq(k) * polar(1.0, phase);
+        fff(k) = feq(k) * std::polar(1.0, phase);
       }  // new frequency
       fdct_usfft_ifftshift(fff, tmp);
       fftw_one(bp, (fftw_complex*)tmp.data(), NULL);
@@ -427,7 +427,7 @@ int fdct_usfft_1dinterp(DblNumMat& off, DblNumMat& wgt, CpxOffVec& val,
     int N = val.m();
     int F = -val.s();
     fftw_plan fp = NULL;
-    map<int, fftw_plan>::iterator fit = f1map.find(N);
+    std::map<int, fftw_plan>::iterator fit = f1map.find(N);
     if (fit != f1map.end()) {
       fp = (*fit).second;
     } else {
@@ -435,7 +435,7 @@ int fdct_usfft_1dinterp(DblNumMat& off, DblNumMat& wgt, CpxOffVec& val,
       f1map[N] = fp;
     }
     fftw_plan bp = NULL;
-    map<int, fftw_plan>::iterator bit = b1map.find(D * N);
+    std::map<int, fftw_plan>::iterator bit = b1map.find(D * N);
     if (bit != b1map.end()) {
       bp = (*bit).second;
     } else {
@@ -446,7 +446,7 @@ int fdct_usfft_1dinterp(DblNumMat& off, DblNumMat& wgt, CpxOffVec& val,
     CpxNumVec tmp(N);
     CpxNumVec exttmp(D * N);
     CpxOffVec feq(N);
-    vector<CpxOffVec> extdat(L);
+    std::vector<CpxOffVec> extdat(L);
     // 1. get freq
     fdct_usfft_ifftshift(val, tmp);
     fftw_one(fp, (fftw_complex*)tmp.data(),
@@ -484,7 +484,7 @@ int fdct_usfft_1dinterp(DblNumMat& off, DblNumMat& wgt, CpxOffVec& val,
         else if (cof >= M_PI)
           cof -= 2.0 * M_PI;  // collapse into [-pi,pi)
         int ind = int(floor(cof / step));
-        ind = min(max(ind, -D * N / 2), D * N / 2 - 1);
+        ind = std::min(std::max(ind, -D * N / 2), D * N / 2 - 1);
         double dta = cof - ind * step;
         double pow = 1;
         cpx sum(0.0, 0.0);  //

@@ -9,9 +9,9 @@
 
 //------------------------
 int fdct3d_forward_angles(double L1, double L2, double L3, int s, int nd,
-                          CpxOffTns& O, vector<vector<CpxNumTns> >& C) {
+                          CpxOffTns& O, std::vector<std::vector<CpxNumTns> >& C) {
   // allocate space
-  vector<CpxNumTns>& csc = C[s];
+  std::vector<CpxNumTns>& csc = C[s];
   csc.resize(6 * nd * nd);
 
   int nf = 6;
@@ -54,9 +54,9 @@ int fdct3d_forward_angles(double L1, double L2, double L3, int s, int nd,
   double W2 = L2 / nd;
   double W3 = L3 / nd;
 
-  typedef pair<int, int> intpair;
-  typedef pair<int, intpair> inttriple;
-  map<inttriple, fftwnd_plan> planmap;
+  typedef std::pair<int, int> intpair;
+  typedef std::pair<int, intpair> inttriple;
+  std::map<inttriple, fftwnd_plan> planmap;
 
   // face 0: x,y,z
   for (int h = 0; h < nd; h++) {  //(y first z second)
@@ -105,10 +105,10 @@ int fdct3d_forward_angles(double L1, double L2, double L3, int s, int nd,
       double R31 = R3 / R1;
       CpxOffTns wpdata(xn, yn, zn);
       for (int xcur = (int)ceil(xs); xcur < xe; xcur++) {
-        int yfm = (int)ceil(max(-R2, R21 * xcur * tan(thts)));
-        int yto = (int)floor(min(R2, R21 * xcur * tan(thte)));
-        int zfm = (int)ceil(max(-R3, R31 * xcur * tan(phis)));
-        int zto = (int)floor(min(R3, R31 * xcur * tan(phie)));
+        int yfm = (int)ceil(std::max(-R2, R21 * xcur * tan(thts)));
+        int yto = (int)floor(std::min(R2, R21 * xcur * tan(thte)));
+        int zfm = (int)ceil(std::max(-R3, R31 * xcur * tan(phis)));
+        int zto = (int)floor(std::min(R3, R31 * xcur * tan(phie)));
         for (int ycur = yfm; ycur <= yto; ycur++)
           for (int zcur = zfm; zcur <= zto; zcur++) {
             int tmpx = xcur % xn;
@@ -178,7 +178,7 @@ int fdct3d_forward_angles(double L1, double L2, double L3, int s, int nd,
       CpxNumTns tpdata(xn, yn, zn);
       fdct3d_ifftshift(xn, yn, zn, wpdata, tpdata);
       fftwnd_plan p = NULL;
-      map<inttriple, fftwnd_plan>::iterator mit =
+      std::map<inttriple, fftwnd_plan>::iterator mit =
           planmap.find(inttriple(xn, intpair(yn, zn)));
       if (mit != planmap.end()) {
         p = (*mit).second;
@@ -188,7 +188,7 @@ int fdct3d_forward_angles(double L1, double L2, double L3, int s, int nd,
         planmap[inttriple(xn, intpair(yn, zn))] = p;
       }
       fftwnd_one(p, (fftw_complex*)tpdata.data(),
-                 NULL);  // cerr<<"wedge s"<<endl;
+                 NULL);  // std::cerr<<"wedge s"<<std::endl;
       double sqrtprod = sqrt(double(xn * yn * zn));
       for (int i = 0; i < xn; i++)
         for (int j = 0; j < yn; j++)
@@ -248,10 +248,10 @@ int fdct3d_forward_angles(double L1, double L2, double L3, int s, int nd,
       double R12 = R1 / R2;
       CpxOffTns wpdata(xn, yn, zn);
       for (int ycur = (int)ceil(ys); ycur < ye; ycur++) {
-        int zfm = (int)ceil(max(-R3, R32 * ycur * tan(thts)));
-        int zto = (int)floor(min(R3, R32 * ycur * tan(thte)));
-        int xfm = (int)ceil(max(-R1, R12 * ycur * tan(phis)));
-        int xto = (int)floor(min(R1, R12 * ycur * tan(phie)));
+        int zfm = (int)ceil(std::max(-R3, R32 * ycur * tan(thts)));
+        int zto = (int)floor(std::min(R3, R32 * ycur * tan(thte)));
+        int xfm = (int)ceil(std::max(-R1, R12 * ycur * tan(phis)));
+        int xto = (int)floor(std::min(R1, R12 * ycur * tan(phie)));
         for (int zcur = zfm; zcur <= zto; zcur++)
           for (int xcur = xfm; xcur <= xto; xcur++) {
             int tmpx = xcur % xn;
@@ -322,7 +322,7 @@ int fdct3d_forward_angles(double L1, double L2, double L3, int s, int nd,
       CpxNumTns tpdata(xn, yn, zn);
       fdct3d_ifftshift(xn, yn, zn, wpdata, tpdata);
       fftwnd_plan p = NULL;
-      map<inttriple, fftwnd_plan>::iterator mit =
+      std::map<inttriple, fftwnd_plan>::iterator mit =
           planmap.find(inttriple(xn, intpair(yn, zn)));
       if (mit != planmap.end()) {
         p = (*mit).second;
@@ -332,7 +332,7 @@ int fdct3d_forward_angles(double L1, double L2, double L3, int s, int nd,
         planmap[inttriple(xn, intpair(yn, zn))] = p;
       }
       fftwnd_one(p, (fftw_complex*)tpdata.data(),
-                 NULL);  // cerr<<"wedge s"<<endl;
+                 NULL);  // std::cerr<<"wedge s"<<std::endl;
       double sqrtprod = sqrt(double(xn * yn * zn));
       for (int i = 0; i < xn; i++)
         for (int j = 0; j < yn; j++)
@@ -393,10 +393,10 @@ int fdct3d_forward_angles(double L1, double L2, double L3, int s, int nd,
                              // double R23 = double(F2)/double(F3);
       CpxOffTns wpdata(xn, yn, zn);
       for (int zcur = (int)ceil(zs); zcur < ze; zcur++) {
-        int xfm = (int)ceil(max(-R1, R13 * zcur * tan(thts)));
-        int xto = (int)floor(min(R1, R13 * zcur * tan(thte)));
-        int yfm = (int)ceil(max(-R2, R23 * zcur * tan(phis)));
-        int yto = (int)floor(min(R2, R23 * zcur * tan(phie)));
+        int xfm = (int)ceil(std::max(-R1, R13 * zcur * tan(thts)));
+        int xto = (int)floor(std::min(R1, R13 * zcur * tan(thte)));
+        int yfm = (int)ceil(std::max(-R2, R23 * zcur * tan(phis)));
+        int yto = (int)floor(std::min(R2, R23 * zcur * tan(phie)));
         for (int xcur = xfm; xcur <= xto; xcur++)
           for (int ycur = yfm; ycur <= yto; ycur++) {
             int tmpx = xcur % xn;
@@ -466,7 +466,7 @@ int fdct3d_forward_angles(double L1, double L2, double L3, int s, int nd,
       CpxNumTns tpdata(xn, yn, zn);
       fdct3d_ifftshift(xn, yn, zn, wpdata, tpdata);
       fftwnd_plan p = NULL;
-      map<inttriple, fftwnd_plan>::iterator mit =
+      std::map<inttriple, fftwnd_plan>::iterator mit =
           planmap.find(inttriple(xn, intpair(yn, zn)));
       if (mit != planmap.end()) {
         p = (*mit).second;
@@ -476,7 +476,7 @@ int fdct3d_forward_angles(double L1, double L2, double L3, int s, int nd,
         planmap[inttriple(xn, intpair(yn, zn))] = p;
       }
       fftwnd_one(p, (fftw_complex*)tpdata.data(),
-                 NULL);  // cerr<<"wedge s"<<endl;
+                 NULL);  // std::cerr<<"wedge s"<<std::endl;
       double sqrtprod = sqrt(double(xn * yn * zn));
       for (int i = 0; i < xn; i++)
         for (int j = 0; j < yn; j++)
@@ -536,10 +536,10 @@ int fdct3d_forward_angles(double L1, double L2, double L3, int s, int nd,
       double R31 = R3 / R1;
       CpxOffTns wpdata(xn, yn, zn);
       for (int xcur = (int)ceil(xs); xcur < xe; xcur++) {
-        int yfm = (int)ceil(max(-R2, R21 * (-xcur) * tan(thts)));
-        int yto = (int)floor(min(R2, R21 * (-xcur) * tan(thte)));
-        int zfm = (int)ceil(max(-R3, R31 * (-xcur) * tan(phis)));
-        int zto = (int)floor(min(R3, R31 * (-xcur) * tan(phie)));
+        int yfm = (int)ceil(std::max(-R2, R21 * (-xcur) * tan(thts)));
+        int yto = (int)floor(std::min(R2, R21 * (-xcur) * tan(thte)));
+        int zfm = (int)ceil(std::max(-R3, R31 * (-xcur) * tan(phis)));
+        int zto = (int)floor(std::min(R3, R31 * (-xcur) * tan(phie)));
         for (int ycur = yfm; ycur <= yto; ycur++)
           for (int zcur = zfm; zcur <= zto; zcur++) {
             int tmpx = xcur % xn;
@@ -609,7 +609,7 @@ int fdct3d_forward_angles(double L1, double L2, double L3, int s, int nd,
       CpxNumTns tpdata(xn, yn, zn);
       fdct3d_ifftshift(xn, yn, zn, wpdata, tpdata);
       fftwnd_plan p = NULL;
-      map<inttriple, fftwnd_plan>::iterator mit =
+      std::map<inttriple, fftwnd_plan>::iterator mit =
           planmap.find(inttriple(xn, intpair(yn, zn)));
       if (mit != planmap.end()) {
         p = (*mit).second;
@@ -619,7 +619,7 @@ int fdct3d_forward_angles(double L1, double L2, double L3, int s, int nd,
         planmap[inttriple(xn, intpair(yn, zn))] = p;
       }
       fftwnd_one(p, (fftw_complex*)tpdata.data(),
-                 NULL);  // cerr<<"wedge s"<<endl;
+                 NULL);  // std::cerr<<"wedge s"<<std::endl;
       double sqrtprod = sqrt(double(xn * yn * zn));
       for (int i = 0; i < xn; i++)
         for (int j = 0; j < yn; j++)
@@ -680,10 +680,10 @@ int fdct3d_forward_angles(double L1, double L2, double L3, int s, int nd,
                              // double R12 = double(F1)/double(F2);
       CpxOffTns wpdata(xn, yn, zn);
       for (int ycur = (int)ceil(ys); ycur < ye; ycur++) {
-        int zfm = (int)ceil(max(-R3, R32 * (-ycur) * tan(thts)));
-        int zto = (int)floor(min(R3, R32 * (-ycur) * tan(thte)));
-        int xfm = (int)ceil(max(-R1, R12 * (-ycur) * tan(phis)));
-        int xto = (int)floor(min(R1, R12 * (-ycur) * tan(phie)));
+        int zfm = (int)ceil(std::max(-R3, R32 * (-ycur) * tan(thts)));
+        int zto = (int)floor(std::min(R3, R32 * (-ycur) * tan(thte)));
+        int xfm = (int)ceil(std::max(-R1, R12 * (-ycur) * tan(phis)));
+        int xto = (int)floor(std::min(R1, R12 * (-ycur) * tan(phie)));
         for (int zcur = zfm; zcur <= zto; zcur++)
           for (int xcur = xfm; xcur <= xto; xcur++) {
             int tmpx = xcur % xn;
@@ -754,7 +754,7 @@ int fdct3d_forward_angles(double L1, double L2, double L3, int s, int nd,
       CpxNumTns tpdata(xn, yn, zn);
       fdct3d_ifftshift(xn, yn, zn, wpdata, tpdata);
       fftwnd_plan p = NULL;
-      map<inttriple, fftwnd_plan>::iterator mit =
+      std::map<inttriple, fftwnd_plan>::iterator mit =
           planmap.find(inttriple(xn, intpair(yn, zn)));
       if (mit != planmap.end()) {
         p = (*mit).second;
@@ -764,7 +764,7 @@ int fdct3d_forward_angles(double L1, double L2, double L3, int s, int nd,
         planmap[inttriple(xn, intpair(yn, zn))] = p;
       }
       fftwnd_one(p, (fftw_complex*)tpdata.data(),
-                 NULL);  // cerr<<"wedge s"<<endl;
+                 NULL);  // std::cerr<<"wedge s"<<std::endl;
       double sqrtprod = sqrt(double(xn * yn * zn));
       for (int i = 0; i < xn; i++)
         for (int j = 0; j < yn; j++)
@@ -825,10 +825,10 @@ int fdct3d_forward_angles(double L1, double L2, double L3, int s, int nd,
                              // double R23 = double(F2)/double(F3);
       CpxOffTns wpdata(xn, yn, zn);
       for (int zcur = (int)ceil(zs); zcur < ze; zcur++) {
-        int xfm = (int)ceil(max(-R1, R13 * (-zcur) * tan(thts)));
-        int xto = (int)floor(min(R1, R13 * (-zcur) * tan(thte)));
-        int yfm = (int)ceil(max(-R2, R23 * (-zcur) * tan(phis)));
-        int yto = (int)floor(min(R2, R23 * (-zcur) * tan(phie)));
+        int xfm = (int)ceil(std::max(-R1, R13 * (-zcur) * tan(thts)));
+        int xto = (int)floor(std::min(R1, R13 * (-zcur) * tan(thte)));
+        int yfm = (int)ceil(std::max(-R2, R23 * (-zcur) * tan(phis)));
+        int yto = (int)floor(std::min(R2, R23 * (-zcur) * tan(phie)));
         for (int xcur = xfm; xcur <= xto; xcur++)
           for (int ycur = yfm; ycur <= yto; ycur++) {
             int tmpx = xcur % xn;
@@ -898,7 +898,7 @@ int fdct3d_forward_angles(double L1, double L2, double L3, int s, int nd,
       CpxNumTns tpdata(xn, yn, zn);
       fdct3d_ifftshift(xn, yn, zn, wpdata, tpdata);
       fftwnd_plan p = NULL;
-      map<inttriple, fftwnd_plan>::iterator mit =
+      std::map<inttriple, fftwnd_plan>::iterator mit =
           planmap.find(inttriple(xn, intpair(yn, zn)));
       if (mit != planmap.end()) {
         p = (*mit).second;
@@ -908,7 +908,7 @@ int fdct3d_forward_angles(double L1, double L2, double L3, int s, int nd,
         planmap[inttriple(xn, intpair(yn, zn))] = p;
       }
       fftwnd_one(p, (fftw_complex*)tpdata.data(),
-                 NULL);  // cerr<<"wedge s"<<endl;
+                 NULL);  // std::cerr<<"wedge s"<<std::endl;
       double sqrtprod = sqrt(double(xn * yn * zn));
       for (int i = 0; i < xn; i++)
         for (int j = 0; j < yn; j++)
@@ -925,10 +925,10 @@ int fdct3d_forward_angles(double L1, double L2, double L3, int s, int nd,
 
   // double sum = 0;
   // for(int k=0; k<wcnt; k++)	sum = sum+energy(csc[k]);
-  // cerr<<energy(G)<<" "<<sum<<" "<<energy(G)-sum<<endl;
+  // std::cerr<<energy(G)<<" "<<sum<<" "<<energy(G)-sum<<std::endl;
 
   // remove plans
-  for (map<inttriple, fftwnd_plan>::iterator mit = planmap.begin();
+  for (std::map<inttriple, fftwnd_plan>::iterator mit = planmap.begin();
        mit != planmap.end(); mit++) {
     fftwnd_plan p = (*mit).second;
     fftwnd_destroy_plan(p);
@@ -939,8 +939,8 @@ int fdct3d_forward_angles(double L1, double L2, double L3, int s, int nd,
 
 //------------------------
 int fdct3d_forward_wavelet(double L1, double L2, double L3, int s, CpxOffTns& O,
-                           vector<vector<CpxNumTns> >& C) {
-  vector<CpxNumTns>& csc = C[s];
+                           std::vector<std::vector<CpxNumTns> >& C) {
+  std::vector<CpxNumTns>& csc = C[s];
   csc.resize(1);
 
   L1 = L1 / 2;
@@ -963,7 +963,7 @@ int fdct3d_forward_wavelet(double L1, double L2, double L3, int s, CpxOffTns& O,
         double pou = big1(i) * big2(j) * big3(k);
         O(i, j, k) = O(i, j, k) * sqrt(1 - pou * pou);
       }
-  // cerr<<energy(O)<<endl;
+  // std::cerr<<energy(O)<<std::endl;
 
   int N1 = O.m();
   int N2 = O.n();
@@ -986,8 +986,8 @@ int fdct3d_forward_wavelet(double L1, double L2, double L3, int s, CpxOffTns& O,
 
 //------------------------
 int fdct3d_forward_center(double L1, double L2, double L3, int s, CpxOffTns& O,
-                          vector<vector<CpxNumTns> >& C) {
-  vector<CpxNumTns>& csc = C[s];
+                          std::vector<std::vector<CpxNumTns> >& C) {
+  std::vector<CpxNumTns>& csc = C[s];
   csc.resize(1);
 
   int S1, S2, S3;
@@ -1006,7 +1006,7 @@ int fdct3d_forward_center(double L1, double L2, double L3, int s, CpxOffTns& O,
       for (int k = -S3 / 2; k < -S3 / 2 + S3; k++) {
         A(i, j, k) = O(i, j, k) * (big1(i) * big2(j) * big3(k));
       }
-  // cerr<<energy(A)<<endl;
+  // std::cerr<<energy(A)<<std::endl;
 
   CpxNumTns T(S1, S2, S3);
   fdct3d_ifftshift(S1, S2, S3, A, T);
@@ -1026,7 +1026,7 @@ int fdct3d_forward_center(double L1, double L2, double L3, int s, CpxOffTns& O,
 
 //-----------------------------------------------
 int fdct3d_forward(int N1, int N2, int N3, int nbscales, int nbdstz_coarse,
-                   int ac, CpxNumTns& X, vector<vector<CpxNumTns> >& C) {
+                   int ac, CpxNumTns& X, std::vector<std::vector<CpxNumTns> >& C) {
   //  fft
   CpxNumTns T(X);
   fftwnd_plan p = fftw3d_create_plan(N3, N2, N1, FFTW_FORWARD,

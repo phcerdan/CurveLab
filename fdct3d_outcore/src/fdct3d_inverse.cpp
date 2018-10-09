@@ -8,7 +8,7 @@
 
 int fdct3d_inverse_angles(double L1, double L2, double L3, int s, int nd,
                           CpxCrvletOcr& C, CpxOffTns& O) {
-  // vector<CpxNumTns>& csc = C[s];
+  // std::vector<CpxNumTns>& csc = C[s];
 
   int nf = 6;
   int wcnt = 0;
@@ -42,9 +42,9 @@ int fdct3d_inverse_angles(double L1, double L2, double L3, int s, int nd,
   double W2 = L2 / nd;
   double W3 = L3 / nd;
 
-  typedef pair<int, int> intpair;
-  typedef pair<int, intpair> inttriple;
-  map<inttriple, fftwnd_plan> planmap;
+  typedef std::pair<int, int> intpair;
+  typedef std::pair<int, intpair> inttriple;
+  std::map<inttriple, fftwnd_plan> planmap;
 
   // face 0: x,y,z
   for (int h = 0; h < nd; h++) {  //(y first z second)
@@ -99,7 +99,7 @@ int fdct3d_inverse_angles(double L1, double L2, double L3, int s, int nd,
       tpdata = C.block(s, wcnt);
       // fft
       fftwnd_plan p = NULL;
-      map<inttriple, fftwnd_plan>::iterator mit =
+      std::map<inttriple, fftwnd_plan>::iterator mit =
           planmap.find(inttriple(xn, intpair(yn, zn)));
       if (mit != planmap.end()) {
         p = (*mit).second;
@@ -109,7 +109,7 @@ int fdct3d_inverse_angles(double L1, double L2, double L3, int s, int nd,
         planmap[inttriple(xn, intpair(yn, zn))] = p;
       }
       fftwnd_one(p, (fftw_complex*)tpdata.data(),
-                 NULL);  // cerr<<"wedge s"<<endl;
+                 NULL);  // std::cerr<<"wedge s"<<std::endl;
       double sqrtprod = sqrt(double(xn * yn * zn));
       for (int i = 0; i < xn; i++)
         for (int j = 0; j < yn; j++)
@@ -118,10 +118,10 @@ int fdct3d_inverse_angles(double L1, double L2, double L3, int s, int nd,
       fdct3d_fftshift(xn, yn, zn, tpdata, wpdata);
 
       for (int xcur = (int)ceil(xs); xcur < xe; xcur++) {
-        int yfm = (int)ceil(max(-R2, R21 * xcur * tan(thts)));
-        int yto = (int)floor(min(R2, R21 * xcur * tan(thte)));
-        int zfm = (int)ceil(max(-R3, R31 * xcur * tan(phis)));
-        int zto = (int)floor(min(R3, R31 * xcur * tan(phie)));
+        int yfm = (int)ceil(std::max(-R2, R21 * xcur * tan(thts)));
+        int yto = (int)floor(std::min(R2, R21 * xcur * tan(thte)));
+        int zfm = (int)ceil(std::max(-R3, R31 * xcur * tan(phis)));
+        int zto = (int)floor(std::min(R3, R31 * xcur * tan(phie)));
         for (int ycur = yfm; ycur <= yto; ycur++)
           for (int zcur = zfm; zcur <= zto; zcur++) {
             int tmpx = xcur % xn;
@@ -245,7 +245,7 @@ int fdct3d_inverse_angles(double L1, double L2, double L3, int s, int nd,
       tpdata = C.block(s, wcnt);
       // fft
       fftwnd_plan p = NULL;
-      map<inttriple, fftwnd_plan>::iterator mit =
+      std::map<inttriple, fftwnd_plan>::iterator mit =
           planmap.find(inttriple(xn, intpair(yn, zn)));
       if (mit != planmap.end()) {
         p = (*mit).second;
@@ -255,7 +255,7 @@ int fdct3d_inverse_angles(double L1, double L2, double L3, int s, int nd,
         planmap[inttriple(xn, intpair(yn, zn))] = p;
       }
       fftwnd_one(p, (fftw_complex*)tpdata.data(),
-                 NULL);  // cerr<<"wedge s"<<endl;
+                 NULL);  // std::cerr<<"wedge s"<<std::endl;
       double sqrtprod = sqrt(double(xn * yn * zn));
       for (int i = 0; i < xn; i++)
         for (int j = 0; j < yn; j++)
@@ -264,10 +264,10 @@ int fdct3d_inverse_angles(double L1, double L2, double L3, int s, int nd,
       fdct3d_fftshift(xn, yn, zn, tpdata, wpdata);
 
       for (int ycur = (int)ceil(ys); ycur < ye; ycur++) {
-        int zfm = (int)ceil(max(-R3, R32 * ycur * tan(thts)));
-        int zto = (int)floor(min(R3, R32 * ycur * tan(thte)));
-        int xfm = (int)ceil(max(-R1, R12 * ycur * tan(phis)));
-        int xto = (int)floor(min(R1, R12 * ycur * tan(phie)));
+        int zfm = (int)ceil(std::max(-R3, R32 * ycur * tan(thts)));
+        int zto = (int)floor(std::min(R3, R32 * ycur * tan(thte)));
+        int xfm = (int)ceil(std::max(-R1, R12 * ycur * tan(phis)));
+        int xto = (int)floor(std::min(R1, R12 * ycur * tan(phie)));
         for (int zcur = zfm; zcur <= zto; zcur++)
           for (int xcur = xfm; xcur <= xto; xcur++) {
             int tmpx = xcur % xn;
@@ -393,7 +393,7 @@ int fdct3d_inverse_angles(double L1, double L2, double L3, int s, int nd,
       tpdata = C.block(s, wcnt);
       // fft
       fftwnd_plan p = NULL;
-      map<inttriple, fftwnd_plan>::iterator mit =
+      std::map<inttriple, fftwnd_plan>::iterator mit =
           planmap.find(inttriple(xn, intpair(yn, zn)));
       if (mit != planmap.end()) {
         p = (*mit).second;
@@ -403,7 +403,7 @@ int fdct3d_inverse_angles(double L1, double L2, double L3, int s, int nd,
         planmap[inttriple(xn, intpair(yn, zn))] = p;
       }
       fftwnd_one(p, (fftw_complex*)tpdata.data(),
-                 NULL);  // cerr<<"wedge s"<<endl;
+                 NULL);  // std::cerr<<"wedge s"<<std::endl;
       double sqrtprod = sqrt(double(xn * yn * zn));
       for (int i = 0; i < xn; i++)
         for (int j = 0; j < yn; j++)
@@ -412,10 +412,10 @@ int fdct3d_inverse_angles(double L1, double L2, double L3, int s, int nd,
       fdct3d_fftshift(xn, yn, zn, tpdata, wpdata);
 
       for (int zcur = (int)ceil(zs); zcur < ze; zcur++) {
-        int xfm = (int)ceil(max(-R1, R13 * zcur * tan(thts)));
-        int xto = (int)floor(min(R1, R13 * zcur * tan(thte)));
-        int yfm = (int)ceil(max(-R2, R23 * zcur * tan(phis)));
-        int yto = (int)floor(min(R2, R23 * zcur * tan(phie)));
+        int xfm = (int)ceil(std::max(-R1, R13 * zcur * tan(thts)));
+        int xto = (int)floor(std::min(R1, R13 * zcur * tan(thte)));
+        int yfm = (int)ceil(std::max(-R2, R23 * zcur * tan(phis)));
+        int yto = (int)floor(std::min(R2, R23 * zcur * tan(phie)));
         for (int xcur = xfm; xcur <= xto; xcur++)
           for (int ycur = yfm; ycur <= yto; ycur++) {
             int tmpx = xcur % xn;
@@ -539,7 +539,7 @@ int fdct3d_inverse_angles(double L1, double L2, double L3, int s, int nd,
       tpdata = C.block(s, wcnt);
       // fft
       fftwnd_plan p = NULL;
-      map<inttriple, fftwnd_plan>::iterator mit =
+      std::map<inttriple, fftwnd_plan>::iterator mit =
           planmap.find(inttriple(xn, intpair(yn, zn)));
       if (mit != planmap.end()) {
         p = (*mit).second;
@@ -549,7 +549,7 @@ int fdct3d_inverse_angles(double L1, double L2, double L3, int s, int nd,
         planmap[inttriple(xn, intpair(yn, zn))] = p;
       }
       fftwnd_one(p, (fftw_complex*)tpdata.data(),
-                 NULL);  // cerr<<"wedge s"<<endl;
+                 NULL);  // std::cerr<<"wedge s"<<std::endl;
       double sqrtprod = sqrt(double(xn * yn * zn));
       for (int i = 0; i < xn; i++)
         for (int j = 0; j < yn; j++)
@@ -558,10 +558,10 @@ int fdct3d_inverse_angles(double L1, double L2, double L3, int s, int nd,
       fdct3d_fftshift(xn, yn, zn, tpdata, wpdata);
 
       for (int xcur = (int)ceil(xs); xcur < xe; xcur++) {
-        int yfm = (int)ceil(max(-R2, R21 * (-xcur) * tan(thts)));
-        int yto = (int)floor(min(R2, R21 * (-xcur) * tan(thte)));
-        int zfm = (int)ceil(max(-R3, R31 * (-xcur) * tan(phis)));
-        int zto = (int)floor(min(R3, R31 * (-xcur) * tan(phie)));
+        int yfm = (int)ceil(std::max(-R2, R21 * (-xcur) * tan(thts)));
+        int yto = (int)floor(std::min(R2, R21 * (-xcur) * tan(thte)));
+        int zfm = (int)ceil(std::max(-R3, R31 * (-xcur) * tan(phis)));
+        int zto = (int)floor(std::min(R3, R31 * (-xcur) * tan(phie)));
         for (int ycur = yfm; ycur <= yto; ycur++)
           for (int zcur = zfm; zcur <= zto; zcur++) {
             int tmpx = xcur % xn;
@@ -686,7 +686,7 @@ int fdct3d_inverse_angles(double L1, double L2, double L3, int s, int nd,
       tpdata = C.block(s, wcnt);
       // fft
       fftwnd_plan p = NULL;
-      map<inttriple, fftwnd_plan>::iterator mit =
+      std::map<inttriple, fftwnd_plan>::iterator mit =
           planmap.find(inttriple(xn, intpair(yn, zn)));
       if (mit != planmap.end()) {
         p = (*mit).second;
@@ -696,7 +696,7 @@ int fdct3d_inverse_angles(double L1, double L2, double L3, int s, int nd,
         planmap[inttriple(xn, intpair(yn, zn))] = p;
       }
       fftwnd_one(p, (fftw_complex*)tpdata.data(),
-                 NULL);  // cerr<<"wedge s"<<endl;
+                 NULL);  // std::cerr<<"wedge s"<<std::endl;
       double sqrtprod = sqrt(double(xn * yn * zn));
       for (int i = 0; i < xn; i++)
         for (int j = 0; j < yn; j++)
@@ -705,10 +705,10 @@ int fdct3d_inverse_angles(double L1, double L2, double L3, int s, int nd,
       fdct3d_fftshift(xn, yn, zn, tpdata, wpdata);
 
       for (int ycur = (int)ceil(ys); ycur < ye; ycur++) {
-        int zfm = (int)ceil(max(-R3, R32 * (-ycur) * tan(thts)));
-        int zto = (int)floor(min(R3, R32 * (-ycur) * tan(thte)));
-        int xfm = (int)ceil(max(-R1, R12 * (-ycur) * tan(phis)));
-        int xto = (int)floor(min(R1, R12 * (-ycur) * tan(phie)));
+        int zfm = (int)ceil(std::max(-R3, R32 * (-ycur) * tan(thts)));
+        int zto = (int)floor(std::min(R3, R32 * (-ycur) * tan(thte)));
+        int xfm = (int)ceil(std::max(-R1, R12 * (-ycur) * tan(phis)));
+        int xto = (int)floor(std::min(R1, R12 * (-ycur) * tan(phie)));
         for (int zcur = zfm; zcur <= zto; zcur++)
           for (int xcur = xfm; xcur <= xto; xcur++) {
             int tmpx = xcur % xn;
@@ -833,7 +833,7 @@ int fdct3d_inverse_angles(double L1, double L2, double L3, int s, int nd,
       tpdata = C.block(s, wcnt);
       // fft
       fftwnd_plan p = NULL;
-      map<inttriple, fftwnd_plan>::iterator mit =
+      std::map<inttriple, fftwnd_plan>::iterator mit =
           planmap.find(inttriple(xn, intpair(yn, zn)));
       if (mit != planmap.end()) {
         p = (*mit).second;
@@ -843,7 +843,7 @@ int fdct3d_inverse_angles(double L1, double L2, double L3, int s, int nd,
         planmap[inttriple(xn, intpair(yn, zn))] = p;
       }
       fftwnd_one(p, (fftw_complex*)tpdata.data(),
-                 NULL);  // cerr<<"wedge s"<<endl;
+                 NULL);  // std::cerr<<"wedge s"<<std::endl;
       double sqrtprod = sqrt(double(xn * yn * zn));
       for (int i = 0; i < xn; i++)
         for (int j = 0; j < yn; j++)
@@ -852,10 +852,10 @@ int fdct3d_inverse_angles(double L1, double L2, double L3, int s, int nd,
       fdct3d_fftshift(xn, yn, zn, tpdata, wpdata);
 
       for (int zcur = (int)ceil(zs); zcur < ze; zcur++) {
-        int xfm = (int)ceil(max(-R1, R13 * (-zcur) * tan(thts)));
-        int xto = (int)floor(min(R1, R13 * (-zcur) * tan(thte)));
-        int yfm = (int)ceil(max(-R2, R23 * (-zcur) * tan(phis)));
-        int yto = (int)floor(min(R2, R23 * (-zcur) * tan(phie)));
+        int xfm = (int)ceil(std::max(-R1, R13 * (-zcur) * tan(thts)));
+        int xto = (int)floor(std::min(R1, R13 * (-zcur) * tan(thte)));
+        int yfm = (int)ceil(std::max(-R2, R23 * (-zcur) * tan(phis)));
+        int yto = (int)floor(std::min(R2, R23 * (-zcur) * tan(phie)));
         for (int xcur = xfm; xcur <= xto; xcur++)
           for (int ycur = yfm; ycur <= yto; ycur++) {
             int tmpx = xcur % xn;
@@ -929,7 +929,7 @@ int fdct3d_inverse_angles(double L1, double L2, double L3, int s, int nd,
   assert(wcnt == nd * nd * nf);
 
   // remove plans
-  for (map<inttriple, fftwnd_plan>::iterator mit = planmap.begin();
+  for (std::map<inttriple, fftwnd_plan>::iterator mit = planmap.begin();
        mit != planmap.end(); mit++) {
     fftwnd_plan p = (*mit).second;
     fftwnd_destroy_plan(p);
@@ -940,7 +940,7 @@ int fdct3d_inverse_angles(double L1, double L2, double L3, int s, int nd,
 
 int fdct3d_inverse_wavelet(double L1, double L2, double L3, int s, CpxNumTns& W,
                            CpxOffTns& O) {
-  /// vector<CpxNumTns>& csc = C[s];
+  /// std::vector<CpxNumTns>& csc = C[s];
 
   L1 = L1 / 2;
   L2 = L2 / 2;
@@ -983,7 +983,7 @@ int fdct3d_inverse_wavelet(double L1, double L2, double L3, int s, CpxNumTns& W,
 
 int fdct3d_inverse_center(double L1, double L2, double L3, int s,
                           CpxCrvletOcr& C, CpxOffTns& O) {
-  // vector<CpxNumTns>& csc = C[s];
+  // std::vector<CpxNumTns>& csc = C[s];
 
   int S1, S2, S3;
   int F1, F2, F3;
@@ -1034,7 +1034,7 @@ int fdct3d_inverse(int N1, int N2, int N3, int nbscales, int nbdstz_coarse,
     double L2 = 4.0 * N2 / 3.0 / pow2(L - 1 - s);
     double L3 = 4.0 * N3 / 3.0 / pow2(L - 1 - s);
     fdct3d_inverse_wavelet(L1, L2, L3, s, W, O);
-  }  // tm1 = time(NULL);  cout<<"wavelet "<<difftime(tm1,tm0)<<endl;  tm0 =
+  }  // tm1 = time(NULL);  std::cout<<"wavelet "<<difftime(tm1,tm0)<<std::endl;  tm0 =
      // tm1;
   {
     int s = 0;
@@ -1042,14 +1042,14 @@ int fdct3d_inverse(int N1, int N2, int N3, int nbscales, int nbdstz_coarse,
     double L2 = 4.0 * N2 / 3.0 / pow2(L - 1 - s);
     double L3 = 4.0 * N3 / 3.0 / pow2(L - 1 - s);
     fdct3d_inverse_center(L1, L2, L3, s, C, O);
-  }  // tm1 = time(NULL);  cout<<"center "<<difftime(tm1,tm0)<<endl;  tm0 = tm1;
+  }  // tm1 = time(NULL);  std::cout<<"center "<<difftime(tm1,tm0)<<std::endl;  tm0 = tm1;
   for (int s = 1; s < L - 1; s++) {
     double L1 = 4.0 * N1 / 3.0 / pow2(L - 1 - s);
     double L2 = 4.0 * N2 / 3.0 / pow2(L - 1 - s);
     double L3 = 4.0 * N3 / 3.0 / pow2(L - 1 - s);
     int nd = nbdstz_coarse * pow2(s / 2);
     fdct3d_inverse_angles(L1, L2, L3, s, nd, C, O);
-  }  // tm1 = time(NULL);  cout<<"angles "<<difftime(tm1,tm0)<<endl;  tm0 = tm1;
+  }  // tm1 = time(NULL);  std::cout<<"angles "<<difftime(tm1,tm0)<<std::endl;  tm0 = tm1;
 
   // fft
   CpxNumTns& T = X;
@@ -1063,7 +1063,7 @@ int fdct3d_inverse(int N1, int N2, int N3, int nbscales, int nbdstz_coarse,
   for (int i = 0; i < N1; i++)
     for (int j = 0; j < N2; j++)
       for (int k = 0; k < N3; k++) T(i, j, k) /= sqrtprod;
-  // tm1 = time(NULL);  cout<<"ifft+shift "<<difftime(tm1,tm0)<<endl;  tm0 =
+  // tm1 = time(NULL);  std::cout<<"ifft+shift "<<difftime(tm1,tm0)<<std::endl;  tm0 =
   // tm1;
 
   return 0;

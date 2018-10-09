@@ -9,7 +9,7 @@ CpxCrvletOcr::CpxCrvletOcr(const char* name) { strcpy(_name, name); }
 
 CpxCrvletOcr::~CpxCrvletOcr() {
   // remove
-  vector<vector<int> >& c = _nxs;
+  std::vector<std::vector<int> >& c = _nxs;
   for (int si = 0; si < c.size(); si++)
     for (int wi = 0; wi < c[si].size(); wi++) {
       char tmp[100];
@@ -18,8 +18,8 @@ CpxCrvletOcr::~CpxCrvletOcr() {
     }
 }
 
-int CpxCrvletOcr::setup(vector<vector<int> > nxs, vector<vector<int> > nys,
-                        vector<vector<int> > nzs, int maxnb) {
+int CpxCrvletOcr::setup(std::vector<std::vector<int> > nxs, std::vector<std::vector<int> > nys,
+                        std::vector<std::vector<int> > nzs, int maxnb) {
   _nxs = nxs;
   _nys = nys;
   _nzs = nzs;
@@ -28,7 +28,7 @@ int CpxCrvletOcr::setup(vector<vector<int> > nxs, vector<vector<int> > nys,
   _count = 0;
   _clock = 0;
 
-  vector<vector<int> >& c = nxs;
+  std::vector<std::vector<int> >& c = nxs;
   _blocks.resize(c.size());
   _szvec.resize(c.size());
   _tmvec.resize(c.size());
@@ -53,7 +53,7 @@ CpxNumTns& CpxCrvletOcr::block(int s, int w) {
       int low = _clock;
       int si = -1;
       int wi = -1;
-      vector<vector<int> >& c = _szvec;
+      std::vector<std::vector<int> >& c = _szvec;
       for (int s = 0; s < c.size(); s++)
         for (int w = 0; w < c[s].size(); w++) {
           if (_tmvec[s][w] != -1)
@@ -77,7 +77,7 @@ CpxNumTns& CpxCrvletOcr::block(int s, int w) {
     _blocks[s][w].resize(_nxs[s][w], _nys[s][w], _nzs[s][w]);
     char tmp[100];
     sprintf(tmp, "%s_%d_%d.dat", _name, s, w);
-    ifstream fin(tmp);
+    std::ifstream fin(tmp);
     if (fin.good())
       fin.read((char*)(_blocks[s][w].data()), _szvec[s][w] * sizeof(cpx));
     _tmvec[s][w] = _clock;

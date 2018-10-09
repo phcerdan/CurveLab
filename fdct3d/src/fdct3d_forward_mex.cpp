@@ -31,7 +31,7 @@ void mexFunction(int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[]) {
   CpxNumTns x;
   mex2cpp(prhs[6], x);
 
-  vector<vector<CpxNumTns> > c;  // vector<int> extra;
+  std::vector<std::vector<CpxNumTns> > c;  // std::vector<int> extra;
   fdct3d_forward(m, n, p, nbscales, nbdstz_coarse, allcurvelets, x, c);
 
   cpp2mex(c, plhs[0]);

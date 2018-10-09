@@ -30,10 +30,10 @@ void mexFunction(int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[]) {
   mex2cpp(prhs[3], nbangles_coarse);
   int allcurvelets;
   mex2cpp(prhs[4], allcurvelets);
-  vector<vector<CpxNumMat> > c;
+  std::vector<std::vector<CpxNumMat> > c;
   mex2cpp(prhs[5], c);
 
-  CpxNumMat x;  // vector<int> extra;
+  CpxNumMat x;  // std::vector<int> extra;
   ifdct_wrapping(m, n, nbscales, nbangles_coarse, allcurvelets, c, x);
 
   cpp2mex(x, plhs[0]);

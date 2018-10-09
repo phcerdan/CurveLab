@@ -46,9 +46,9 @@ int fdct3d_inverse(int N1, int N2, int N3, int nbscales, int nbdstz_coarse,
 // for the curvelet transform, extract the freqency center and grid size for
 // each curvelet
 int fdct3d_param(int N1, int N2, int N3, int nbscales, int nbdstz_coarse,
-                 vector<vector<double> >& fxs, vector<vector<double> >& fys,
-                 vector<vector<double> >& fzs, vector<vector<int> >& nxs,
-                 vector<vector<int> >& nys, vector<vector<int> >& nzs);
+                 std::vector<std::vector<double> >& fxs, std::vector<std::vector<double> >& fys,
+                 std::vector<std::vector<double> >& fzs, std::vector<std::vector<int> >& nxs,
+                 std::vector<std::vector<int> >& nys, std::vector<std::vector<int> >& nzs);
 // this function obtains auxiliary information about curvelet transform
 // INPUTS:
 //  N1,N2,N3 -- the size of the input data
@@ -72,11 +72,11 @@ int fdct3d_partition_cpxnumtnsblkd_x(int N1, int N2, int N3, int b,
 
 int fdct3d_partition_cpxcrvletprtd(int N1, int N2, int N3, int nbscales,
                                    int nbdstz_coarse,
-                                   vector<vector<bool> >& exists,
-                                   vector<vector<int> >& owners);
+                                   std::vector<std::vector<bool> >& exists,
+                                   std::vector<std::vector<int> >& owners);
 
 int fdct3d_dependency(int N1, int N2, int N3, int b, int nbscales,
-                      int nbdstz_coarse, vector<vector<int> >& crvowners,
+                      int nbdstz_coarse, std::vector<std::vector<int> >& crvowners,
                       BolNumTns& tnsexists);
 
 int fdct3d_fft(CpxNumTnsBlkd& W);

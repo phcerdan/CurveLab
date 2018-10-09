@@ -85,8 +85,8 @@ class NumVec {
   F* data() const { return _data; }
 };
 
-// INPUT template <class F> inline istream& operator>>(istream& is, NumVec<F>&
-// vec) OUTPUT template <class F> inline ostream& operator<<(ostream& os, const
+// INPUT template <class F> inline std::istream& operator>>(std::istream& is, NumVec<F>&
+// vec) OUTPUT template <class F> inline std::ostream& operator<<(std::ostream& os, const
 // NumVec<F>& vec)
 
 template <class F>

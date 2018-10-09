@@ -7,9 +7,6 @@
 #define _OFFMAT_HPP_
 
 #include "fdct_wrapping_inc.hpp"
-using std::ios_base;
-using std::istream;
-using std::ostream;
 
 FDCT_WRAPPING_NS_BEGIN_NAMESPACE
 
@@ -101,11 +98,11 @@ class OffMat {
 
 // OUTPUT
 template <class F>
-inline ostream& operator<<(ostream& os, const OffMat<F>& mat) {
-  os << mat.m() << " " << mat.n() << " " << mat.s() << " " << mat.t() << endl;
+inline std::ostream& operator<<(std::ostream& os, const OffMat<F>& mat) {
+  os << mat.m() << " " << mat.n() << " " << mat.s() << " " << mat.t() << std::endl;
   for (int i = mat.s(); i < mat.s() + mat.m(); i++) {
     for (int j = mat.t(); j < mat.t() + mat.n(); j++) os << " " << mat(i, j);
-    os << endl;
+    os << std::endl;
   }
   return os;
 }

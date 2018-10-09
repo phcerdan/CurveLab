@@ -8,16 +8,16 @@
 
 //----------------------------------------
 int fdct3d_param_center(double L1, double L2, double L3, int s,
-                        vector<vector<double> >& fxs,
-                        vector<vector<double> >& fys,
-                        vector<vector<double> >& fzs, vector<vector<int> >& nxs,
-                        vector<vector<int> >& nys, vector<vector<int> >& nzs) {
-  vector<double>& fx = fxs[s];
-  vector<double>& fy = fys[s];
-  vector<double>& fz = fzs[s];
-  vector<int>& nx = nxs[s];
-  vector<int>& ny = nys[s];
-  vector<int>& nz = nzs[s];
+                        std::vector<std::vector<double> >& fxs,
+                        std::vector<std::vector<double> >& fys,
+                        std::vector<std::vector<double> >& fzs, std::vector<std::vector<int> >& nxs,
+                        std::vector<std::vector<int> >& nys, std::vector<std::vector<int> >& nzs) {
+  std::vector<double>& fx = fxs[s];
+  std::vector<double>& fy = fys[s];
+  std::vector<double>& fz = fzs[s];
+  std::vector<int>& nx = nxs[s];
+  std::vector<int>& ny = nys[s];
+  std::vector<int>& nz = nzs[s];
 
   int S1, S2, S3;
   int F1, F2, F3;
@@ -41,17 +41,17 @@ int fdct3d_param_center(double L1, double L2, double L3, int s,
 }
 
 int fdct3d_param_wavelet(double L1, double L2, double L3, int s, int N1, int N2,
-                         int N3, vector<vector<double> >& fxs,
-                         vector<vector<double> >& fys,
-                         vector<vector<double> >& fzs,
-                         vector<vector<int> >& nxs, vector<vector<int> >& nys,
-                         vector<vector<int> >& nzs) {
-  vector<double>& fx = fxs[s];
-  vector<double>& fy = fys[s];
-  vector<double>& fz = fzs[s];
-  vector<int>& nx = nxs[s];
-  vector<int>& ny = nys[s];
-  vector<int>& nz = nzs[s];
+                         int N3, std::vector<std::vector<double> >& fxs,
+                         std::vector<std::vector<double> >& fys,
+                         std::vector<std::vector<double> >& fzs,
+                         std::vector<std::vector<int> >& nxs, std::vector<std::vector<int> >& nys,
+                         std::vector<std::vector<int> >& nzs) {
+  std::vector<double>& fx = fxs[s];
+  std::vector<double>& fy = fys[s];
+  std::vector<double>& fz = fzs[s];
+  std::vector<int>& nx = nxs[s];
+  std::vector<int>& ny = nys[s];
+  std::vector<int>& nz = nzs[s];
 
   fx.resize(1);
   fy.resize(1);
@@ -72,16 +72,16 @@ int fdct3d_param_wavelet(double L1, double L2, double L3, int s, int N1, int N2,
 
 //----------------------------------------
 int fdct3d_param_angles(double L1, double L2, double L3, int s, int nd,
-                        vector<vector<double> >& fxs,
-                        vector<vector<double> >& fys,
-                        vector<vector<double> >& fzs, vector<vector<int> >& nxs,
-                        vector<vector<int> >& nys, vector<vector<int> >& nzs) {
-  vector<double>& fx = fxs[s];
-  vector<double>& fy = fys[s];
-  vector<double>& fz = fzs[s];
-  vector<int>& nx = nxs[s];
-  vector<int>& ny = nys[s];
-  vector<int>& nz = nzs[s];
+                        std::vector<std::vector<double> >& fxs,
+                        std::vector<std::vector<double> >& fys,
+                        std::vector<std::vector<double> >& fzs, std::vector<std::vector<int> >& nxs,
+                        std::vector<std::vector<int> >& nys, std::vector<std::vector<int> >& nzs) {
+  std::vector<double>& fx = fxs[s];
+  std::vector<double>& fy = fys[s];
+  std::vector<double>& fz = fzs[s];
+  std::vector<int>& nx = nxs[s];
+  std::vector<int>& ny = nys[s];
+  std::vector<int>& nz = nzs[s];
 
   int nbw = 6 * nd * nd;
   fx.resize(nbw);
@@ -259,9 +259,9 @@ int fdct3d_param_angles(double L1, double L2, double L3, int s, int nd,
 
 //----------------------------------------
 int fdct3d_param(int N1, int N2, int N3, int nbscales, int nbdstz_coarse,
-                 vector<vector<double> >& fxs, vector<vector<double> >& fys,
-                 vector<vector<double> >& fzs, vector<vector<int> >& nxs,
-                 vector<vector<int> >& nys, vector<vector<int> >& nzs) {
+                 std::vector<std::vector<double> >& fxs, std::vector<std::vector<double> >& fys,
+                 std::vector<std::vector<double> >& fzs, std::vector<std::vector<int> >& nxs,
+                 std::vector<std::vector<int> >& nys, std::vector<std::vector<int> >& nzs) {
   fxs.resize(nbscales);
   fys.resize(nbscales);
   fzs.resize(nbscales);

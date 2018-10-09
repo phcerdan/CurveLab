@@ -28,7 +28,7 @@ CpxCrvletPrtd& CpxCrvletPrtd::operator=(const CpxCrvletPrtd& D) {
 //---------------------------------------------
 double CpxCrvletPrtd::globalenergy() {
   double lclsum = 0;
-  vector<vector<int> >& c = _nx;
+  std::vector<std::vector<int> >& c = _nx;
   for (int s = 0; s < c.size(); s++)
     for (int w = 0; w < c[s].size(); w++)
       if (_owners[s][w] == mpirank()) lclsum += energy(_blocks[s][w]);
@@ -39,7 +39,7 @@ double CpxCrvletPrtd::globalenergy() {
 }
 //---------------------------------------------
 int CpxCrvletPrtd::check() {
-  vector<vector<int> >& c = _nx;
+  std::vector<std::vector<int> >& c = _nx;
   for (int s = 0; s < c.size(); s++)
     for (int w = 0; w < c[s].size(); w++)
       if (_exists[s][w] == true) {
@@ -51,9 +51,9 @@ int CpxCrvletPrtd::check() {
 }
 
 //-------------------------------------------------
-int CpxCrvletPrtd::setup(vector<vector<int> > nx, vector<vector<int> > ny,
-                         vector<vector<int> > nz,
-                         vector<vector<int> >& owners) {
+int CpxCrvletPrtd::setup(std::vector<std::vector<int> > nx, std::vector<std::vector<int> > ny,
+                         std::vector<std::vector<int> > nz,
+                         std::vector<std::vector<int> >& owners) {
   _nx = nx;
   _ny = ny;
   _nz = nz;
@@ -63,7 +63,7 @@ int CpxCrvletPrtd::setup(vector<vector<int> > nx, vector<vector<int> > ny,
   _owners = owners;
   // sizes
   int C2D = 2;
-  vector<vector<int> >& c = _nx;
+  std::vector<std::vector<int> >& c = _nx;
   _sizes.resize(nx.size());
   for (int s = 0; s < c.size(); s++) {
     _sizes[s].resize(c[s].size());
@@ -88,10 +88,10 @@ int CpxCrvletPrtd::setup(vector<vector<int> > nx, vector<vector<int> > ny,
   return 0;
 }
 
-int CpxCrvletPrtd::expand(vector<vector<bool> >& newexists) {
+int CpxCrvletPrtd::expand(std::vector<std::vector<bool> >& newexists) {
   // todo: check size of newexists is right
   // the final exists is the union of _exists and newexisits
-  vector<vector<int> >& c = _nx;
+  std::vector<std::vector<int> >& c = _nx;
   for (int s = 0; s < c.size(); s++) {
     for (int w = 0; w < c[s].size(); w++)
       if (_exists[s][w] == false && newexists[s][w] == true) {
@@ -102,11 +102,11 @@ int CpxCrvletPrtd::expand(vector<vector<bool> >& newexists) {
   return 0;
 }
 
-int CpxCrvletPrtd::scatter(vector<vector<bool> >& newexists) {
+int CpxCrvletPrtd::scatter(std::vector<std::vector<bool> >& newexists) {
   // LEXING: usually only called once
-  vector<vector<int> >& c = _nx;
-  // 1. the global vector
-  vector<int> glblszs(mpisize(), 0);
+  std::vector<std::vector<int> >& c = _nx;
+  // 1. the global std::vector
+  std::vector<int> glblszs(mpisize(), 0);
   int glbnum = 0;
   for (int s = 0; s < c.size(); s++)
     for (int w = 0; w < c[s].size(); w++) {
@@ -114,13 +114,13 @@ int CpxCrvletPrtd::scatter(vector<vector<bool> >& newexists) {
       glblszs[pi] += _sizes[s][w];
       glbnum += _sizes[s][w];
     }
-  vector<int> glbaccs(mpisize(), 0);
+  std::vector<int> glbaccs(mpisize(), 0);
   int tmp = 0;
   for (int pi = 0; pi < mpisize(); pi++) {
     glbaccs[pi] = tmp;
     tmp += glblszs[pi];
   }
-  vector<vector<int> > glbstts(c);  // not cleared, but okay
+  std::vector<std::vector<int> > glbstts(c);  // not cleared, but okay
   for (int s = 0; s < c.size(); s++)
     for (int w = 0; w < c[s].size(); w++) {
       int pi = _owners[s][w];
@@ -129,7 +129,7 @@ int CpxCrvletPrtd::scatter(vector<vector<bool> >& newexists) {
     }
 
   int lclsum = 0;
-  vector<int> l2gmap;
+  std::vector<int> l2gmap;
   for (int s = 0; s < c.size(); s++)
     for (int w = 0; w < c[s].size(); w++) {
       if (newexists[s][w] == true && _exists[s][w] == false) {
@@ -146,7 +146,7 @@ int CpxCrvletPrtd::scatter(vector<vector<bool> >& newexists) {
   iC(ISCreateGeneral(PETSC_COMM_WORLD, l2gmap.size(), &(l2gmap[0]), &glbis));
   l2gmap.clear();  // SAVE SPACE
 
-  // 2. allocate a global vector, and copy data
+  // 2. allocate a global std::vector, and copy data
   Vec glbvec;
   iC(VecCreateMPI(PETSC_COMM_WORLD, glblszs[mpirank()], PETSC_DETERMINE,
                   &glbvec));
@@ -202,8 +202,8 @@ int CpxCrvletPrtd::scatter(vector<vector<bool> >& newexists) {
   return 0;
 }
 
-int CpxCrvletPrtd::shift(vector<vector<int> >& newowners) {
-  vector<vector<int> >& c = _nx;
+int CpxCrvletPrtd::shift(std::vector<std::vector<int> >& newowners) {
+  std::vector<std::vector<int> >& c = _nx;
   for (int s = 0; s < c.size(); s++)
     for (int w = 0; w < c[s].size(); w++) {
       if (newowners[s][w] == mpirank()) {
@@ -215,7 +215,7 @@ int CpxCrvletPrtd::shift(vector<vector<int> >& newowners) {
 }
 
 int CpxCrvletPrtd::discard() {
-  vector<vector<int> >& c = _nx;
+  std::vector<std::vector<int> >& c = _nx;
   for (int s = 0; s < c.size(); s++)
     for (int w = 0; w < c[s].size(); w++) {
       if (_owners[s][w] != mpirank()) {
@@ -228,9 +228,9 @@ int CpxCrvletPrtd::discard() {
 
 int CpxCrvletPrtd::combine() {
   // LEXING: usually only called once
-  vector<vector<int> >& c = _nx;
-  // 1. the global vector
-  vector<int> glblszs(mpisize(), 0);
+  std::vector<std::vector<int> >& c = _nx;
+  // 1. the global std::vector
+  std::vector<int> glblszs(mpisize(), 0);
   int glbnum = 0;
   for (int s = 0; s < c.size(); s++)
     for (int w = 0; w < c[s].size(); w++) {
@@ -238,13 +238,13 @@ int CpxCrvletPrtd::combine() {
       glblszs[pi] += _sizes[s][w];
       glbnum += _sizes[s][w];
     }
-  vector<int> glbaccs(mpisize(), 0);
+  std::vector<int> glbaccs(mpisize(), 0);
   int tmp = 0;
   for (int pi = 0; pi < mpisize(); pi++) {
     glbaccs[pi] = tmp;
     tmp += glblszs[pi];
   }
-  vector<vector<int> > glbstts(c);
+  std::vector<std::vector<int> > glbstts(c);
   for (int s = 0; s < c.size(); s++)
     for (int w = 0; w < c[s].size(); w++) {
       int pi = _owners[s][w];
@@ -253,7 +253,7 @@ int CpxCrvletPrtd::combine() {
     }
 
   int lclsum = 0;
-  vector<int> l2gmap;
+  std::vector<int> l2gmap;
   for (int s = 0; s < c.size(); s++)
     for (int w = 0; w < c[s].size(); w++) {
       if (_exists[s][w] == true && _owners[s][w] != mpirank()) {
@@ -270,7 +270,7 @@ int CpxCrvletPrtd::combine() {
   iC(ISCreateGeneral(PETSC_COMM_WORLD, l2gmap.size(), &(l2gmap[0]), &glbis));
   l2gmap.clear();  // SAVE SPACE
 
-  // 2. allocate a global vector and a local vector, put data in local
+  // 2. allocate a global std::vector and a local std::vector, put data in local
   Vec glbvec;
   iC(VecCreateMPI(PETSC_COMM_WORLD, glblszs[mpirank()], PETSC_DETERMINE,
                   &glbvec));

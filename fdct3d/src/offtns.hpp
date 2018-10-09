@@ -118,14 +118,14 @@ typedef OffTns<int> IntOffTns;
 typedef OffTns<double> DblOffTns;
 typedef OffTns<cpx> CpxOffTns;
 
-// template <class F> inline istream& operator>>(istream& is, OffTns<F>& tns);
-inline ostream& operator<<(
-    ostream& os,
-    const CpxOffTns& T) {  // os<<T.m()<<" "<<T.n()<<" "<<T.p()<<endl;
+// template <class F> inline std::istream& operator>>(std::istream& is, OffTns<F>& tns);
+inline std::ostream& operator<<(
+    std::ostream& os,
+    const CpxOffTns& T) {  // os<<T.m()<<" "<<T.n()<<" "<<T.p()<<std::endl;
   for (int k = T.u(); k < T.p() + T.u(); k++)
     for (int j = T.t(); j < T.n() + T.t(); j++)
       for (int i = T.s(); i < T.m() + T.s(); i++)
-        os << " " << real(T(i, j, k)) << " " << imag(T(i, j, k)) << endl;
+        os << " " << std::real(T(i, j, k)) << " " << std::imag(T(i, j, k)) << std::endl;
   return os;
 }
 

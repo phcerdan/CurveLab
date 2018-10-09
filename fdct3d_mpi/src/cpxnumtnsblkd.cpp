@@ -101,8 +101,8 @@ int CpxNumTnsBlkd::expand(BolNumTns& newexists) {
 
 int CpxNumTnsBlkd::scatter(BolNumTns& newexists) {
   // LEXING: usually only called once
-  // 1. the global vector
-  vector<int> glblszs(mpisize(), 0);
+  // 1. the global std::vector
+  std::vector<int> glblszs(mpisize(), 0);
   int glbnum = 0;
   for (int k = 0; k < g(); k++)
     for (int j = 0; j < f(); j++)
@@ -112,7 +112,7 @@ int CpxNumTnsBlkd::scatter(BolNumTns& newexists) {
         glbnum += _sizes(i, j, k);
       }
 
-  vector<int> glbaccs(mpisize(), 0);
+  std::vector<int> glbaccs(mpisize(), 0);
   int tmp = 0;
   for (int pi = 0; pi < mpisize(); pi++) {
     glbaccs[pi] = tmp;
@@ -128,8 +128,8 @@ int CpxNumTnsBlkd::scatter(BolNumTns& newexists) {
       }
 
   int lclsum = 0;
-  vector<int> lclbid;
-  vector<int> glbbid;
+  std::vector<int> lclbid;
+  std::vector<int> glbbid;
   for (int k = 0; k < g(); k++)
     for (int j = 0; j < f(); j++)
       for (int i = 0; i < e(); i++) {
@@ -151,7 +151,7 @@ int CpxNumTnsBlkd::scatter(BolNumTns& newexists) {
   glbbid.clear();
 
   /*
-  vector<PetscInt> l2gmap;
+  std::vector<PetscInt> l2gmap;
   for(int k=0; k<g(); k++)	 for(int j=0; j<f(); j++)		for(int
   i=0; i<e(); i++) { if(newexists(i,j,k)==true && _exists(i,j,k)==false) {
                 lclsum += _sizes(i,j,k);
@@ -165,7 +165,7 @@ int CpxNumTnsBlkd::scatter(BolNumTns& newexists) {
   &glbis) ); l2gmap.clear(); //SAVE SPACE
   */
 
-  // 2. allocate a global vector, and copy data
+  // 2. allocate a global std::vector, and copy data
   Vec glbvec;
   iC(VecCreateMPI(PETSC_COMM_WORLD, glblszs[mpirank()], PETSC_DETERMINE,
                   &glbvec));
@@ -187,7 +187,7 @@ int CpxNumTnsBlkd::scatter(BolNumTns& newexists) {
   iC(VecRestoreArray(glbvec, &glbarr));
 
   Vec lclvec;
-  iC(VecCreateSeq(PETSC_COMM_SELF, lclsum, &lclvec));  // cerr<<lclsum<<endl;
+  iC(VecCreateSeq(PETSC_COMM_SELF, lclsum, &lclvec));  // std::cerr<<lclsum<<std::endl;
 
   // 3. vec scatter
   VecScatter sc;
@@ -250,8 +250,8 @@ int CpxNumTnsBlkd::discard() {
 
 int CpxNumTnsBlkd::combine() {
   // LEXING: usually only called once
-  // 1. the global vector
-  vector<int> glblszs(mpisize(), 0);
+  // 1. the global std::vector
+  std::vector<int> glblszs(mpisize(), 0);
   int glbnum = 0;
   for (int k = 0; k < g(); k++)
     for (int j = 0; j < f(); j++)
@@ -262,7 +262,7 @@ int CpxNumTnsBlkd::combine() {
       }  // iC( MPI_Barrier(MPI_COMM_WORLD) );  iC( PetscPrintf(MPI_COMM_WORLD,
          // "combine glbnum %d\n", glbnum) );
 
-  vector<int> glbaccs(mpisize(), 0);
+  std::vector<int> glbaccs(mpisize(), 0);
   int tmp = 0;
   for (int pi = 0; pi < mpisize(); pi++) {
     glbaccs[pi] = tmp;
@@ -278,8 +278,8 @@ int CpxNumTnsBlkd::combine() {
       }
 
   int lclsum = 0;
-  vector<int> lclbid;
-  vector<int> glbbid;
+  std::vector<int> lclbid;
+  std::vector<int> glbbid;
   for (int k = 0; k < g(); k++)
     for (int j = 0; j < f(); j++)
       for (int i = 0; i < e(); i++) {
@@ -302,7 +302,7 @@ int CpxNumTnsBlkd::combine() {
 
   /*
   int lclsum = 0;
-  vector<PetscInt> l2gmap;
+  std::vector<PetscInt> l2gmap;
   for(int k=0; k<g(); k++)	 for(int j=0; j<f(); j++)		for(int
   i=0; i<e(); i++) { if(_exists(i,j,k)==true && _owners(i,j,k)!=mpirank()) {
                 lclsum += _sizes(i,j,k);
@@ -316,13 +316,13 @@ int CpxNumTnsBlkd::combine() {
   &glbis) ); l2gmap.clear(); //SAVE SPACE
   */
 
-  // 2. allocate a global vector and a local vector, put data in local
+  // 2. allocate a global std::vector and a local std::vector, put data in local
   Vec glbvec;
   iC(VecCreateMPI(PETSC_COMM_WORLD, glblszs[mpirank()], PETSC_DETERMINE,
                   &glbvec));
 
   Vec lclvec;
-  iC(VecCreateSeq(PETSC_COMM_SELF, lclsum, &lclvec));  // cerr<<lclsum<<endl;
+  iC(VecCreateSeq(PETSC_COMM_SELF, lclsum, &lclvec));  // std::cerr<<lclsum<<std::endl;
   double* lclarr;
   iC(VecGetArray(lclvec, &lclarr));
   double* lclptr = lclarr;

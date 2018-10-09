@@ -9,13 +9,13 @@
 FDCT_WRAPPING_NS_BEGIN_NAMESPACE
 
 int fdct_wrapping_sepangle(double XL1, double XL2, int nbangle, CpxOffMat& Xhgh,
-                           vector<CpxNumMat>& csc);
-int fdct_wrapping_wavelet(CpxOffMat& Xhgh, vector<CpxNumMat>& csc);
+                           std::vector<CpxNumMat>& csc);
+int fdct_wrapping_wavelet(CpxOffMat& Xhgh, std::vector<CpxNumMat>& csc);
 
 //-------------------------------------------------------------------
 int fdct_wrapping(int N1, int N2, int nbscales, int nbangles_coarse,
                   int allcurvelets, CpxNumMat& x,
-                  vector<vector<CpxNumMat> >& c) {
+                  std::vector<std::vector<CpxNumMat> >& c) {
   //---------------------------------------------
   assert(N1 == x.m() && N2 == x.n());
 
@@ -34,7 +34,7 @@ int fdct_wrapping(int N1, int N2, int nbscales, int nbangles_coarse,
   fdct_wrapping_fftshift(T, O);
 
   //-----------------------------------------------------------------------------
-  vector<CpxOffMat> Xhghs;
+  std::vector<CpxOffMat> Xhghs;
   Xhghs.resize(nbscales);
   CpxOffMat X;
   // unfold or not
@@ -108,7 +108,7 @@ int fdct_wrapping(int N1, int N2, int nbscales, int nbangles_coarse,
   Xhghs[0] = X;
 
   //-----------------------------------------------------------------------------
-  vector<int> nbangles(nbscales);
+  std::vector<int> nbangles(nbscales);
   if (allcurvelets == 1) {
     // nbangles
     nbangles[0] = 1;
@@ -152,10 +152,10 @@ int fdct_wrapping(int N1, int N2, int nbscales, int nbangles_coarse,
 
 //-----------------------------------------------------------------------
 int fdct_wrapping_sepangle(double XL1, double XL2, int nbangle, CpxOffMat& Xhgh,
-                           vector<CpxNumMat>& csc) {
+                           std::vector<CpxNumMat>& csc) {
   // WEDGE ORDERING: from -45 degree, counter-clockwise
-  typedef pair<int, int> intpair;
-  map<intpair, fftwnd_plan> planmap;
+  typedef std::pair<int, int> intpair;
+  std::map<intpair, fftwnd_plan> planmap;
 
   int nbquadrants = 4;
   int nd = nbangle / 4;
@@ -213,8 +213,8 @@ int fdct_wrapping_sepangle(double XL1, double XL2, int nbangle, CpxOffMat& Xhgh,
       double R21 = XR2 / XR1;  // ratio
       CpxOffMat wpdata(xn, yn);
       for (int xcur = xf; xcur < xe; xcur++) {  // for each layer
-        int yfm = (int)ceil(max(-XR2, R21 * xcur * tan(thts)));
-        int yto = (int)floor(min(XR2, R21 * xcur * tan(thte)));
+        int yfm = (int)ceil(std::max(-XR2, R21 * xcur * tan(thts)));
+        int yto = (int)floor(std::min(XR2, R21 * xcur * tan(thte)));
         for (int ycur = yfm; ycur <= yto; ycur++) {
           int tmpx = xcur % xn;
           if (tmpx < -xh) tmpx += xn;
@@ -251,7 +251,7 @@ int fdct_wrapping_sepangle(double XL1, double XL2, int nbangle, CpxOffMat& Xhgh,
         fdct_wrapping_ifftshift(rpdata, tpdata);
         // ifft
         fftwnd_plan p = NULL;
-        map<intpair, fftwnd_plan>::iterator mit = planmap.find(intpair(xn, yn));
+        std::map<intpair, fftwnd_plan>::iterator mit = planmap.find(intpair(xn, yn));
         if (mit != planmap.end()) {
           p = (*mit).second;
         } else {
@@ -279,7 +279,7 @@ int fdct_wrapping_sepangle(double XL1, double XL2, int nbangle, CpxOffMat& Xhgh,
   XL1 = XL1b;
   XL2 = XL2b;
 
-  for (map<intpair, fftwnd_plan>::iterator mit = planmap.begin();
+  for (std::map<intpair, fftwnd_plan>::iterator mit = planmap.begin();
        mit != planmap.end(); mit++) {
     fftwnd_plan p = (*mit).second;
     fftwnd_destroy_plan(p);
@@ -287,7 +287,7 @@ int fdct_wrapping_sepangle(double XL1, double XL2, int nbangle, CpxOffMat& Xhgh,
   return 0;
 }
 //-----------------------------------------------------------------------
-int fdct_wrapping_wavelet(CpxOffMat& Xhgh, vector<CpxNumMat>& csc) {
+int fdct_wrapping_wavelet(CpxOffMat& Xhgh, std::vector<CpxNumMat>& csc) {
   int N1 = Xhgh.m();
   int N2 = Xhgh.n();
   int F1 = -Xhgh.s();

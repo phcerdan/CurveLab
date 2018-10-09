@@ -97,11 +97,11 @@ class OffMat {
 
 // OUTPUT
 template <class F>
-inline ostream& operator<<(ostream& os, const OffMat<F>& mat) {
-  os << mat.m() << " " << mat.n() << " " << mat.s() << " " << mat.t() << endl;
+inline std::ostream& operator<<(std::ostream& os, const OffMat<F>& mat) {
+  os << mat.m() << " " << mat.n() << " " << mat.s() << " " << mat.t() << std::endl;
   for (int i = mat.s(); i < mat.s() + mat.m(); i++) {
     for (int j = mat.t(); j < mat.t() + mat.n(); j++) os << " " << mat(i, j);
-    os << endl;
+    os << std::endl;
   }
   return os;
 }

@@ -26,9 +26,9 @@ inline void mex2cpp(const mxArray*& md, CpxNumMat& cd);
 inline void cpp2mex(const CpxNumMat& cd, mxArray*& md);
 
 template <class T>
-inline void mex2cpp(const mxArray*& md, vector<T>& cd);
+inline void mex2cpp(const mxArray*& md, std::vector<T>& cd);
 template <class T>
-inline void cpp2mex(const vector<T>& cd, mxArray*& md);
+inline void cpp2mex(const std::vector<T>& cd, mxArray*& md);
 
 //----------------------int
 inline void mex2cpp(const mxArray*& md, int& cd) {
@@ -94,8 +94,8 @@ inline void cpp2mex(const CpxOffMat& cd, mxArray*& md) {
   int cnt = 0;
   for (int j = t; j < t + n; j++)
     for (int i = s; i < s + m; i++) {
-      xr[cnt] = real(cd(i, j));
-      xi[cnt] = imag(cd(i, j));
+      xr[cnt] = std::real(cd(i, j));
+      xi[cnt] = std::imag(cd(i, j));
       cnt++;
     }
   return;
@@ -141,16 +141,16 @@ inline void cpp2mex(const CpxNumMat& cd, mxArray*& md) {
   int cnt = 0;
   for (int j = 0; j < n; j++)
     for (int i = 0; i < m; i++) {
-      xr[cnt] = real(cd(i, j));
-      xi[cnt] = imag(cd(i, j));
+      xr[cnt] = std::real(cd(i, j));
+      xi[cnt] = std::imag(cd(i, j));
       cnt++;
     }
   return;
 }
 
-//----------------------vector<...>
+//----------------------std::vector<...>
 template <class T>
-inline void mex2cpp(const mxArray*& md, vector<T>& cd) {
+inline void mex2cpp(const mxArray*& md, std::vector<T>& cd) {
   int m = mxGetM(md);
   assert(m == 1);
   int n = mxGetN(md);
@@ -162,7 +162,7 @@ inline void mex2cpp(const mxArray*& md, vector<T>& cd) {
   return;
 }
 template <class T>
-inline void cpp2mex(const vector<T>& cd, mxArray*& md) {
+inline void cpp2mex(const std::vector<T>& cd, mxArray*& md) {
   int n = cd.size();
   md = mxCreateCellMatrix(1, n);
   for (int ci = 0; ci < n; ci++) {

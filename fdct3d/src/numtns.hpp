@@ -105,14 +105,14 @@ typedef NumTns<int> IntNumTns;
 typedef NumTns<double> DblNumTns;
 typedef NumTns<cpx> CpxNumTns;
 
-// template <class F> inline istream& operator>>(istream& is, NumTns<F>& tns);
-inline ostream& operator<<(
-    ostream& os,
-    const CpxNumTns& T) {  // os<<T.m()<<" "<<T.n()<<" "<<T.p()<<endl;
+// template <class F> inline std::istream& operator>>(std::istream& is, NumTns<F>& tns);
+inline std::ostream& operator<<(
+    std::ostream& os,
+    const CpxNumTns& T) {  // os<<T.m()<<" "<<T.n()<<" "<<T.p()<<std::endl;
   for (int k = 0; k < T.p(); k++)
     for (int j = 0; j < T.n(); j++)
       for (int i = 0; i < T.m(); i++)
-        os << " " << real(T(i, j, k)) << " " << imag(T(i, j, k)) << endl;
+        os << " " << std::real(T(i, j, k)) << " " << std::imag(T(i, j, k)) << std::endl;
   return os;
 }
 

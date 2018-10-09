@@ -78,8 +78,8 @@ int fdct3d_partition_cpxnumtnsblkd_x(int N1, int N2, int N3, int b,
 //---------------------------------------------------------------------------------------------------------------------
 int fdct3d_partition_cpxcrvletprtd(int N1, int N2, int N3, int nbscales,
                                    int nbdstz_coarse,
-                                   vector<vector<bool> >& exists,
-                                   vector<vector<int> >& owners) {
+                                   std::vector<std::vector<bool> >& exists,
+                                   std::vector<std::vector<int> >& owners) {
   int mpirank;
   MPI_Comm_rank(MPI_COMM_WORLD, &mpirank);
   int mpisize;
@@ -89,8 +89,8 @@ int fdct3d_partition_cpxcrvletprtd(int N1, int N2, int N3, int nbscales,
   owners.resize(nbscales - 1);
   {
     int s = 0;
-    vector<bool>& es = exists[s];
-    vector<int>& os = owners[s];
+    std::vector<bool>& es = exists[s];
+    std::vector<int>& os = owners[s];
     es.resize(1);
     os.resize(1);
     int pi = 0;
@@ -101,8 +101,8 @@ int fdct3d_partition_cpxcrvletprtd(int N1, int N2, int N3, int nbscales,
 
   for (int s = 1; s < nbscales - 1; s++) {
     int nd = nbdstz_coarse * pow2(s / 2);
-    vector<bool>& es = exists[s];
-    vector<int>& os = owners[s];
+    std::vector<bool>& es = exists[s];
+    std::vector<int>& os = owners[s];
     es.resize(nd * nd * nf);
     os.resize(nd * nd * nf);
 
@@ -179,7 +179,7 @@ int fdct3d_partition_cpxcrvletprtd(int N1, int N2, int N3, int nbscales,
 //---------------------------------------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------------------------------------------
 int fdct3d_dependency_center(int N1, int N2, int N3, int b, double L1,
-                             double L2, double L3, vector<int>& crvowners,
+                             double L2, double L3, std::vector<int>& crvowners,
                              BolNumTns& tnsexists) {
   int mpirank;
   MPI_Comm_rank(MPI_COMM_WORLD, &mpirank);
@@ -206,7 +206,7 @@ int fdct3d_dependency_center(int N1, int N2, int N3, int b, double L1,
 
 int fdct3d_dependency_angles(int N1, int N2, int N3, int b, double L1,
                              double L2, double L3, int nd,
-                             vector<int>& crvowners, BolNumTns& tnsexists) {
+                             std::vector<int>& crvowners, BolNumTns& tnsexists) {
   int mpirank;
   MPI_Comm_rank(MPI_COMM_WORLD, &mpirank);
   int mpisize;
@@ -267,10 +267,10 @@ int fdct3d_dependency_angles(int N1, int N2, int N3, int b, double L1,
         double R21 = R2 / R1;
         double R31 = R3 / R1;
         for (int xcur = (int)ceil(xs); xcur < xe; xcur++) {
-          int yfm = (int)ceil(max(-R2, R21 * xcur * tan(thts)));
-          int yto = (int)floor(min(R2, R21 * xcur * tan(thte)));
-          int zfm = (int)ceil(max(-R3, R31 * xcur * tan(phis)));
-          int zto = (int)floor(min(R3, R31 * xcur * tan(phie)));
+          int yfm = (int)ceil(std::max(-R2, R21 * xcur * tan(thts)));
+          int yto = (int)floor(std::min(R2, R21 * xcur * tan(thte)));
+          int zfm = (int)ceil(std::max(-R3, R31 * xcur * tan(phis)));
+          int zto = (int)floor(std::min(R3, R31 * xcur * tan(phie)));
           for (int ycur = yfm; ycur <= yto; ycur++)
             for (int zcur = zfm; zcur <= zto; zcur++) {
               int bi, bj, bk;
@@ -330,10 +330,10 @@ int fdct3d_dependency_angles(int N1, int N2, int N3, int b, double L1,
         double R32 = R3 / R2;
         double R12 = R1 / R2;
         for (int ycur = (int)ceil(ys); ycur < ye; ycur++) {
-          int zfm = (int)ceil(max(-R3, R32 * ycur * tan(thts)));
-          int zto = (int)floor(min(R3, R32 * ycur * tan(thte)));
-          int xfm = (int)ceil(max(-R1, R12 * ycur * tan(phis)));
-          int xto = (int)floor(min(R1, R12 * ycur * tan(phie)));
+          int zfm = (int)ceil(std::max(-R3, R32 * ycur * tan(thts)));
+          int zto = (int)floor(std::min(R3, R32 * ycur * tan(thte)));
+          int xfm = (int)ceil(std::max(-R1, R12 * ycur * tan(phis)));
+          int xto = (int)floor(std::min(R1, R12 * ycur * tan(phie)));
           for (int zcur = zfm; zcur <= zto; zcur++)
             for (int xcur = xfm; xcur <= xto; xcur++) {
               int bi, bj, bk;
@@ -393,10 +393,10 @@ int fdct3d_dependency_angles(int N1, int N2, int N3, int b, double L1,
         double R13 = double(F1) / double(F3);
         double R23 = double(F2) / double(F3);
         for (int zcur = (int)ceil(zs); zcur < ze; zcur++) {
-          int xfm = (int)ceil(max(-R1, R13 * zcur * tan(thts)));
-          int xto = (int)floor(min(R1, R13 * zcur * tan(thte)));
-          int yfm = (int)ceil(max(-R2, R23 * zcur * tan(phis)));
-          int yto = (int)floor(min(R2, R23 * zcur * tan(phie)));
+          int xfm = (int)ceil(std::max(-R1, R13 * zcur * tan(thts)));
+          int xto = (int)floor(std::min(R1, R13 * zcur * tan(thte)));
+          int yfm = (int)ceil(std::max(-R2, R23 * zcur * tan(phis)));
+          int yto = (int)floor(std::min(R2, R23 * zcur * tan(phie)));
           for (int xcur = xfm; xcur <= xto; xcur++)
             for (int ycur = yfm; ycur <= yto; ycur++) {
               int bi, bj, bk;
@@ -456,10 +456,10 @@ int fdct3d_dependency_angles(int N1, int N2, int N3, int b, double L1,
         double R21 = R2 / R1;
         double R31 = R3 / R1;
         for (int xcur = (int)ceil(xs); xcur < xe; xcur++) {
-          int yfm = (int)ceil(max(-R2, R21 * (-xcur) * tan(thts)));
-          int yto = (int)floor(min(R2, R21 * (-xcur) * tan(thte)));
-          int zfm = (int)ceil(max(-R3, R31 * (-xcur) * tan(phis)));
-          int zto = (int)floor(min(R3, R31 * (-xcur) * tan(phie)));
+          int yfm = (int)ceil(std::max(-R2, R21 * (-xcur) * tan(thts)));
+          int yto = (int)floor(std::min(R2, R21 * (-xcur) * tan(thte)));
+          int zfm = (int)ceil(std::max(-R3, R31 * (-xcur) * tan(phis)));
+          int zto = (int)floor(std::min(R3, R31 * (-xcur) * tan(phie)));
           for (int ycur = yfm; ycur <= yto; ycur++)
             for (int zcur = zfm; zcur <= zto; zcur++) {
               int bi, bj, bk;
@@ -519,10 +519,10 @@ int fdct3d_dependency_angles(int N1, int N2, int N3, int b, double L1,
         double R32 = double(F3) / double(F2);
         double R12 = double(F1) / double(F2);
         for (int ycur = (int)ceil(ys); ycur < ye; ycur++) {
-          int zfm = (int)ceil(max(-R3, R32 * (-ycur) * tan(thts)));
-          int zto = (int)floor(min(R3, R32 * (-ycur) * tan(thte)));
-          int xfm = (int)ceil(max(-R1, R12 * (-ycur) * tan(phis)));
-          int xto = (int)floor(min(R1, R12 * (-ycur) * tan(phie)));
+          int zfm = (int)ceil(std::max(-R3, R32 * (-ycur) * tan(thts)));
+          int zto = (int)floor(std::min(R3, R32 * (-ycur) * tan(thte)));
+          int xfm = (int)ceil(std::max(-R1, R12 * (-ycur) * tan(phis)));
+          int xto = (int)floor(std::min(R1, R12 * (-ycur) * tan(phie)));
           for (int zcur = zfm; zcur <= zto; zcur++)
             for (int xcur = xfm; xcur <= xto; xcur++) {
               int bi, bj, bk;
@@ -582,10 +582,10 @@ int fdct3d_dependency_angles(int N1, int N2, int N3, int b, double L1,
         double R13 = double(F1) / double(F3);
         double R23 = double(F2) / double(F3);
         for (int zcur = (int)ceil(zs); zcur < ze; zcur++) {
-          int xfm = (int)ceil(max(-R1, R13 * (-zcur) * tan(thts)));
-          int xto = (int)floor(min(R1, R13 * (-zcur) * tan(thte)));
-          int yfm = (int)ceil(max(-R2, R23 * (-zcur) * tan(phis)));
-          int yto = (int)floor(min(R2, R23 * (-zcur) * tan(phie)));
+          int xfm = (int)ceil(std::max(-R1, R13 * (-zcur) * tan(thts)));
+          int xto = (int)floor(std::min(R1, R13 * (-zcur) * tan(thte)));
+          int yfm = (int)ceil(std::max(-R2, R23 * (-zcur) * tan(phis)));
+          int yto = (int)floor(std::min(R2, R23 * (-zcur) * tan(phie)));
           for (int xcur = xfm; xcur <= xto; xcur++)
             for (int ycur = yfm; ycur <= yto; ycur++) {
               int bi, bj, bk;
@@ -604,7 +604,7 @@ int fdct3d_dependency_angles(int N1, int N2, int N3, int b, double L1,
   return 0;
 }
 int fdct3d_dependency(int N1, int N2, int N3, int b, int nbscales,
-                      int nbdstz_coarse, vector<vector<int> >& crvowners,
+                      int nbdstz_coarse, std::vector<std::vector<int> >& crvowners,
                       BolNumTns& tnsexists) {
   // int e = N1/b;  int f = N2/b;  int g = N3/b;
   int mpirank;
@@ -670,7 +670,7 @@ int fdct3d_fft(CpxNumTnsBlkd& W) {
           for (int ioff = 0; ioff < b; ioff++)
             for (int joff = 0; joff < b; joff++)
               for (int koff = 0; koff < b; koff++) {
-                cpx coef = polar(
+                cpx coef = std::polar(
                     1.0, M_PI * (ioff + istt + joff + jstt + koff + kstt));
                 Wblk(ioff, joff, koff) *= coef / sqrtprod;
               }
@@ -910,7 +910,7 @@ int fdct3d_ifft(CpxNumTnsBlkd& W) {
           for (int ioff = 0; ioff < b; ioff++)
             for (int joff = 0; joff < b; joff++)
               for (int koff = 0; koff < b; koff++) {
-                cpx coef = polar(1.0, -M_PI * (ioff + istt + joff + jstt +
+                cpx coef = std::polar(1.0, -M_PI * (ioff + istt + joff + jstt +
                                                koff + kstt));  // negative size
                 Wblk(ioff, joff, koff) *= coef / sqrtprod;
               }

@@ -11,26 +11,26 @@ FDCT_USFFT_NS_BEGIN_NAMESPACE
 //------------------------------------
 int fdct_usfft_adjfftL(int N1, int N2, CpxOffMat& O, CpxNumMat& x);
 int fdct_usfft_adjsepscale(int N1, int N2, int nbscales, int ac,
-                           vector<CpxOffMat>& Xhghs, CpxOffMat& O);
+                           std::vector<CpxOffMat>& Xhghs, CpxOffMat& O);
 int fdct_usfft_adjsepangle(double XL1, double XL2, int nbangles,
-                           vector<CpxOffMat>& msc, CpxOffMat& Xhgh);
-int fdct_usfft_adjifftS(vector<CpxNumMat>& csc, vector<CpxOffMat>& msc);
-int fdct_usfft_adjwavelet(vector<CpxNumMat>& csc, CpxOffMat& Xhgh);
+                           std::vector<CpxOffMat>& msc, CpxOffMat& Xhgh);
+int fdct_usfft_adjifftS(std::vector<CpxNumMat>& csc, std::vector<CpxOffMat>& msc);
+int fdct_usfft_adjwavelet(std::vector<CpxNumMat>& csc, CpxOffMat& Xhgh);
 
 int fdct_usfft_adj1dinterp(DblNumMat& off, DblNumMat& wgt, CpxNumMat& res,
-                           CpxOffVec& val, map<int, fftw_plan>& f1map,
-                           map<int, fftw_plan>& b1map);
+                           CpxOffVec& val, std::map<int, fftw_plan>& f1map,
+                           std::map<int, fftw_plan>& b1map);
 
 //------------------------------------
 int afdct_usfft(int N1, int N2, int nbscales, int nbangles_coarse, int ac,
-                vector<vector<CpxNumMat> >& c, CpxNumMat& x) {
+                std::vector<std::vector<CpxNumMat> >& c, CpxNumMat& x) {
   assert(nbscales == c.size() && nbangles_coarse == c[1].size());
   // int F1 = N1/2;  int F2 = N2/2;
   // 1.
-  vector<CpxOffMat> Xhghs;
+  std::vector<CpxOffMat> Xhghs;
   Xhghs.resize(nbscales);
   if (ac == 1) {
-    vector<int> nbangles(nbscales);
+    std::vector<int> nbangles(nbscales);
     nbangles[0] = 1;
     for (int sc = 1; sc < nbscales; sc++)
       nbangles[sc] = nbangles_coarse * pow2(int(ceil(double(sc - 1) / 2)));
@@ -38,7 +38,7 @@ int afdct_usfft(int N1, int N2, int nbscales, int nbangles_coarse, int ac,
     double XL1 = 4.0 * N1 / 3.0;
     double XL2 = 4.0 * N2 / 3.0;  // range
     for (int sc = nbscales - 1; sc > 0; sc--) {
-      vector<CpxOffMat> msc(nbangles[sc]);
+      std::vector<CpxOffMat> msc(nbangles[sc]);
       fdct_usfft_adjifftS(c[sc], msc);
       fdct_usfft_adjsepangle(XL1, XL2, nbangles[sc], msc, Xhghs[sc]);
       XL1 = XL1 / 2;
@@ -46,7 +46,7 @@ int afdct_usfft(int N1, int N2, int nbscales, int nbangles_coarse, int ac,
     }
     fdct_usfft_adjwavelet(c[0], Xhghs[0]);
   } else {
-    vector<int> nbangles(nbscales);
+    std::vector<int> nbangles(nbscales);
     nbangles[0] = 1;
     for (int sc = 1; sc < nbscales - 1; sc++)
       nbangles[sc] = nbangles_coarse * pow2(int(ceil(double(sc - 1) / 2)));
@@ -57,7 +57,7 @@ int afdct_usfft(int N1, int N2, int nbscales, int nbangles_coarse, int ac,
     double XL1 = 2.0 * N1 / 3.0;
     double XL2 = 2.0 * N2 / 3.0;
     for (int sc = nbscales - 2; sc > 0; sc--) {
-      vector<CpxOffMat> msc(nbangles[sc]);
+      std::vector<CpxOffMat> msc(nbangles[sc]);
       fdct_usfft_adjifftS(c[sc], msc);
       fdct_usfft_adjsepangle(XL1, XL2, nbangles[sc], msc, Xhghs[sc]);
       XL1 = XL1 / 2;
@@ -96,7 +96,7 @@ int fdct_usfft_adjfftL(int N1, int N2, CpxOffMat& O, CpxNumMat& x) {
 
 //------------------------------------
 int fdct_usfft_adjsepscale(int N1, int N2, int nbscales, int ac,
-                           vector<CpxOffMat>& Xhghs, CpxOffMat& O) {
+                           std::vector<CpxOffMat>& Xhghs, CpxOffMat& O) {
   int F1 = N1 / 2;
   int F2 = N2 / 2;
   CpxOffMat X;
@@ -188,13 +188,13 @@ int fdct_usfft_adjsepscale(int N1, int N2, int nbscales, int ac,
 
 //------------------------------------
 int fdct_usfft_adjsepangle(double XL1, double XL2, int nbangles,
-                           vector<CpxOffMat>& msc, CpxOffMat& Xhgh) {
+                           std::vector<CpxOffMat>& msc, CpxOffMat& Xhgh) {
   int XS1, XS2;
   int XF1, XF2;
   double XR1, XR2;
   fdct_usfft_rangecompute(XL1, XL2, XS1, XS2, XF1, XF2, XR1, XR2);
-  map<int, fftw_plan> f1map;  // forward 1d map, IN_PLACE
-  map<int, fftw_plan> b1map;  // backward 1d map, IN_PLACE
+  std::map<int, fftw_plan> f1map;  // forward 1d map, IN_PLACE
+  std::map<int, fftw_plan> b1map;  // backward 1d map, IN_PLACE
 
   // allocate space
   Xhgh.resize(XS1, XS2);
@@ -233,7 +233,7 @@ int fdct_usfft_adjsepangle(double XL1, double XL2, int nbangles,
     if (yn % 2 == 0) yn++;
     int xh = xn / 2;
     int yh = yn / 2;
-    vector<CpxOffMat> tsc(nd);
+    std::vector<CpxOffMat> tsc(nd);
     // rotate data forward into msc
     for (int w = nd - 1; w >= 0; w--) {
       fdct_usfft_rotate_forward(q, msc[wcnt], tsc[w]);
@@ -288,12 +288,12 @@ int fdct_usfft_adjsepangle(double XL1, double XL2, int nbangles,
   XL2 = XL2b;
   assert(wcnt == nbangles);
 
-  for (map<int, fftw_plan>::iterator mit = f1map.begin(); mit != f1map.end();
+  for (std::map<int, fftw_plan>::iterator mit = f1map.begin(); mit != f1map.end();
        mit++) {
     fftw_plan p = (*mit).second;
     fftw_destroy_plan(p);
   }
-  for (map<int, fftw_plan>::iterator mit = b1map.begin(); mit != b1map.end();
+  for (std::map<int, fftw_plan>::iterator mit = b1map.begin(); mit != b1map.end();
        mit++) {
     fftw_plan p = (*mit).second;
     fftw_destroy_plan(p);
@@ -302,9 +302,9 @@ int fdct_usfft_adjsepangle(double XL1, double XL2, int nbangles,
 }
 
 //------------------------------------
-int fdct_usfft_adjifftS(vector<CpxNumMat>& csc, vector<CpxOffMat>& msc) {
-  typedef pair<int, int> intpair;
-  map<intpair, fftwnd_plan> planmap;
+int fdct_usfft_adjifftS(std::vector<CpxNumMat>& csc, std::vector<CpxOffMat>& msc) {
+  typedef std::pair<int, int> intpair;
+  std::map<intpair, fftwnd_plan> planmap;
   // do work
   msc.resize(csc.size());
   for (int w = 0; w < csc.size(); w++) {
@@ -317,7 +317,7 @@ int fdct_usfft_adjifftS(vector<CpxNumMat>& csc, vector<CpxOffMat>& msc) {
         csc[w];  // shift	 //CpxNumMat tpdata(xn,yn);
                  // fdct_usfft_ifftshift(xn,yn,xh,yh,csc[w],tpdata);
     // fft
-    map<intpair, fftwnd_plan>::iterator mit = planmap.find(intpair(xn, yn));
+    std::map<intpair, fftwnd_plan>::iterator mit = planmap.find(intpair(xn, yn));
     fftwnd_plan p = NULL;
     if (mit != planmap.end()) {
       p = (*mit).second;
@@ -334,7 +334,7 @@ int fdct_usfft_adjifftS(vector<CpxNumMat>& csc, vector<CpxOffMat>& msc) {
     msc[w].resize(xn, yn);
     fdct_usfft_fftshift(tpdata, msc[w]);
   }
-  for (map<intpair, fftwnd_plan>::iterator mit = planmap.begin();
+  for (std::map<intpair, fftwnd_plan>::iterator mit = planmap.begin();
        mit != planmap.end(); mit++) {
     fftwnd_plan p = (*mit).second;
     fftwnd_destroy_plan(p);
@@ -343,7 +343,7 @@ int fdct_usfft_adjifftS(vector<CpxNumMat>& csc, vector<CpxOffMat>& msc) {
 }
 
 //------------------------------------
-int fdct_usfft_adjwavelet(vector<CpxNumMat>& csc, CpxOffMat& Xhgh) {
+int fdct_usfft_adjwavelet(std::vector<CpxNumMat>& csc, CpxOffMat& Xhgh) {
   assert(csc.size() == 1);
   CpxNumMat& C = csc[0];
   int N1 = C.m();
@@ -366,21 +366,21 @@ int fdct_usfft_adjwavelet(vector<CpxNumMat>& csc, CpxOffMat& Xhgh) {
 
 //------------------------------------
 int fdct_usfft_adj1dinterp(DblNumMat& off, DblNumMat& wgt, CpxNumMat& res,
-                           CpxOffVec& val, map<int, fftw_plan>& f1map,
-                           map<int, fftw_plan>& b1map) {
+                           CpxOffVec& val, std::map<int, fftw_plan>& f1map,
+                           std::map<int, fftw_plan>& b1map) {
   if (off.n() <= 64) {  // SIMPLE INTERPOLATION
     //--------------------------------------------
     int N = val.m();
     int F = -val.s();
     fftw_plan fp = NULL;
-    map<int, fftw_plan>::iterator fit = f1map.find(N);
+    std::map<int, fftw_plan>::iterator fit = f1map.find(N);
     if (fit != f1map.end()) {
       fp = (*fit).second;
     } else {
       fp = fftw_create_plan(N, FFTW_FORWARD, FFTW_ESTIMATE | FFTW_IN_PLACE);
       f1map[N] = fp;
     }
-    map<int, fftw_plan>::iterator bit = b1map.find(N);
+    std::map<int, fftw_plan>::iterator bit = b1map.find(N);
     fftw_plan bp = NULL;
     if (bit != b1map.end()) {
       bp = (*bit).second;
@@ -407,7 +407,7 @@ int fdct_usfft_adj1dinterp(DblNumMat& off, DblNumMat& wgt, CpxNumMat& res,
       fdct_usfft_fftshift(tmp, fff);                /// new freq
       for (int k = -F; k < -F + N; k++) {
         double phase = -2 * M_PI * k / double(N) * off(0, w);
-        feq(k) = fff(k) * polar(1.0, phase);
+        feq(k) = fff(k) * std::polar(1.0, phase);
       }  // freq
       for (int k = -F; k < -F + N; k++) {
         sum(k) += feq(k);
@@ -428,7 +428,7 @@ int fdct_usfft_adj1dinterp(DblNumMat& off, DblNumMat& wgt, CpxNumMat& res,
     int N = val.m();
     int F = -val.s();
     fftw_plan fp = NULL;  // length D*N
-    map<int, fftw_plan>::iterator fit = f1map.find(D * N);
+    std::map<int, fftw_plan>::iterator fit = f1map.find(D * N);
     if (fit != f1map.end()) {
       fp = (*fit).second;
     } else {
@@ -436,7 +436,7 @@ int fdct_usfft_adj1dinterp(DblNumMat& off, DblNumMat& wgt, CpxNumMat& res,
       f1map[D * N] = fp;
     }
     fftw_plan bp = NULL;  // length N
-    map<int, fftw_plan>::iterator bit = b1map.find(N);
+    std::map<int, fftw_plan>::iterator bit = b1map.find(N);
     if (bit != b1map.end()) {
       bp = (*bit).second;
     } else {
@@ -448,8 +448,8 @@ int fdct_usfft_adj1dinterp(DblNumMat& off, DblNumMat& wgt, CpxNumMat& res,
     CpxOffVec feq(N);
     clear(feq);
     CpxOffVec pok(N);
-    setvalue(pok, cpx(1, 0));     // power of k, unit vector
-    vector<CpxOffVec> extdat(L);  // CpxOffVec extdat[4];
+    setvalue(pok, cpx(1, 0));     // power of k, unit std::vector
+    std::vector<CpxOffVec> extdat(L);  // CpxOffVec extdat[4];
     for (int l = 0; l < L; l++) {
       extdat[l].resize(D * N);
     }
@@ -463,7 +463,7 @@ int fdct_usfft_adj1dinterp(DblNumMat& off, DblNumMat& wgt, CpxNumMat& res,
         else if (cof >= M_PI)
           cof -= 2 * M_PI;  // collapse into [-pi,pi)
         int ind = int(floor(cof / step));
-        ind = min(max(ind, -D * N / 2),
+        ind = std::min(std::max(ind, -D * N / 2),
                   D * N / 2 - 1);  // assert(ind>=-D*N/2 && ind<D*N/2);
         double dta = cof - ind * step;
         double pow = 1.0;

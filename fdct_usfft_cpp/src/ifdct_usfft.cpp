@@ -12,35 +12,35 @@ FDCT_USFFT_NS_BEGIN_NAMESPACE
 //------------------------------------
 extern int fdct_usfft_adjfftL(int N1, int N2, CpxOffMat& T, CpxNumMat& x);
 extern int fdct_usfft_adjsepscale(int N1, int N2, int nbscales, int ac,
-                                  vector<CpxOffMat>& Xhghs, CpxOffMat& O);
+                                  std::vector<CpxOffMat>& Xhghs, CpxOffMat& O);
 extern int fdct_usfft_adjsepangle(double XL1, double XL2, int nbangles,
-                                  vector<CpxOffMat>& msc, CpxOffMat& Xhgh);
-extern int fdct_usfft_adjifftS(vector<CpxNumMat>& csc, vector<CpxOffMat>& msc);
-extern int fdct_usfft_adjwavelet(vector<CpxNumMat>& csc, CpxOffMat& Xhgh);
+                                  std::vector<CpxOffMat>& msc, CpxOffMat& Xhgh);
+extern int fdct_usfft_adjifftS(std::vector<CpxNumMat>& csc, std::vector<CpxOffMat>& msc);
+extern int fdct_usfft_adjwavelet(std::vector<CpxNumMat>& csc, CpxOffMat& Xhgh);
 
 extern int fdct_usfft_sepangle(double XL1, double XL2, int nbangles,
-                               CpxOffMat& Xhgh, vector<CpxOffMat>& msc);
+                               CpxOffMat& Xhgh, std::vector<CpxOffMat>& msc);
 
 int fdct_usfft_invsepangle(double XL1, double XL2, int nbangles,
-                           vector<CpxOffMat>& msc, CpxOffMat& Xhgh);
+                           std::vector<CpxOffMat>& msc, CpxOffMat& Xhgh);
 int fdct_usfft_makeToeplitz(double XL1, double XL2, int nbangles,
-                            vector<vector<CpxNumVec> >& Lambda,
-                            map<int, fftw_plan>& f1map,
-                            map<int, fftw_plan>& b1map);
+                            std::vector<std::vector<CpxNumVec> >& Lambda,
+                            std::map<int, fftw_plan>& f1map,
+                            std::map<int, fftw_plan>& b1map);
 int fdct_usfft_multToeplitz(double XL1, double XL2, int nbangles,
-                            vector<vector<CpxNumVec> >& Lambda, CpxOffMat& d,
-                            CpxOffMat& p, map<int, fftw_plan>& f1map,
-                            map<int, fftw_plan>& b1map);
+                            std::vector<std::vector<CpxNumVec> >& Lambda, CpxOffMat& d,
+                            CpxOffMat& p, std::map<int, fftw_plan>& f1map,
+                            std::map<int, fftw_plan>& b1map);
 
 //------------------------------------
 int ifdct_usfft(int N1, int N2, int nbscales, int nbangles_coarse, int ac,
-                vector<vector<CpxNumMat> >& c, CpxNumMat& x) {
+                std::vector<std::vector<CpxNumMat> >& c, CpxNumMat& x) {
   assert(nbscales == c.size() && nbangles_coarse == c[1].size());
   // 1.
-  vector<CpxOffMat> Xhghs;
+  std::vector<CpxOffMat> Xhghs;
   Xhghs.resize(nbscales);
   if (ac == 1) {
-    vector<int> nbangles(nbscales);
+    std::vector<int> nbangles(nbscales);
     nbangles[0] = 1;
     for (int sc = 1; sc < nbscales; sc++)
       nbangles[sc] = nbangles_coarse * pow2(int(ceil(double(sc - 1) / 2)));
@@ -48,7 +48,7 @@ int ifdct_usfft(int N1, int N2, int nbscales, int nbangles_coarse, int ac,
     double XL1 = 4.0 * N1 / 3.0;
     double XL2 = 4.0 * N2 / 3.0;  // range
     for (int sc = nbscales - 1; sc > 0; sc--) {
-      vector<CpxOffMat> msc(nbangles[sc]);
+      std::vector<CpxOffMat> msc(nbangles[sc]);
       fdct_usfft_adjifftS(c[sc], msc);
       fdct_usfft_invsepangle(XL1, XL2, nbangles[sc], msc, Xhghs[sc]);
       XL1 = XL1 / 2;
@@ -56,7 +56,7 @@ int ifdct_usfft(int N1, int N2, int nbscales, int nbangles_coarse, int ac,
     }
     fdct_usfft_adjwavelet(c[0], Xhghs[0]);
   } else {
-    vector<int> nbangles(nbscales);
+    std::vector<int> nbangles(nbscales);
     nbangles[0] = 1;
     for (int sc = 1; sc < nbscales - 1; sc++)
       nbangles[sc] = nbangles_coarse * pow2(int(ceil(double(sc - 1) / 2)));
@@ -67,7 +67,7 @@ int ifdct_usfft(int N1, int N2, int nbscales, int nbangles_coarse, int ac,
     double XL1 = 2.0 * N1 / 3.0;
     double XL2 = 2.0 * N2 / 3.0;
     for (int sc = nbscales - 2; sc > 0; sc--) {
-      vector<CpxOffMat> msc(nbangles[sc]);
+      std::vector<CpxOffMat> msc(nbangles[sc]);
       fdct_usfft_adjifftS(c[sc], msc);
       fdct_usfft_invsepangle(XL1, XL2, nbangles[sc], msc, Xhghs[sc]);
       XL1 = XL1 / 2;
@@ -85,16 +85,16 @@ int ifdct_usfft(int N1, int N2, int nbscales, int nbangles_coarse, int ac,
 
 //--------------------------------------------
 int fdct_usfft_invsepangle(double XL1, double XL2, int nbangles,
-                           vector<CpxOffMat>& msc, CpxOffMat& x) {
+                           std::vector<CpxOffMat>& msc, CpxOffMat& x) {
   int XS1, XS2;
   int XF1, XF2;
   double XR1, XR2;
   fdct_usfft_rangecompute(XL1, XL2, XS1, XS2, XF1, XF2, XR1, XR2);
-  map<int, fftw_plan> f1map;  // forward 1d map, IN_PLACE
-  map<int, fftw_plan> b1map;  // backward 1d map, IN_PLACE
+  std::map<int, fftw_plan> f1map;  // forward 1d map, IN_PLACE
+  std::map<int, fftw_plan> b1map;  // backward 1d map, IN_PLACE
 
   // Toeplitz preparation
-  vector<vector<CpxNumVec> > Lambda;
+  std::vector<std::vector<CpxNumVec> > Lambda;
   fdct_usfft_makeToeplitz(XL1, XL2, nbangles, Lambda, f1map, b1map);
 
   // 0. allocate space for x and set x = 0;
@@ -115,7 +115,7 @@ int fdct_usfft_invsepangle(double XL1, double XL2, int nbangles,
   int m = x.m();
   int n = x.n();
   double v0 = 0;
-  for (int i = 0; i < m * n; i++) v0 += norm(rdata[i]);
+  for (int i = 0; i < m * n; i++) v0 += std::norm(rdata[i]);
   double v1 = v0;
 
   int it = 0;
@@ -129,8 +129,8 @@ int fdct_usfft_invsepangle(double XL1, double XL2, int nbangles,
     cpx* qdata = q.data();
     // tmp = d' q = d' A d
     cpx tz(0, 0);
-    for (int i = 0; i < m * n; i++) tz += conj(ddata[i]) * qdata[i];
-    double tmp = real(tz);
+    for (int i = 0; i < m * n; i++) tz += std::conj(ddata[i]) * qdata[i];
+    double tmp = std::real(tz);
 
     // alpha = v1/tmp;
     double alpha = v1 / tmp;
@@ -141,7 +141,7 @@ int fdct_usfft_invsepangle(double XL1, double XL2, int nbangles,
     // reset v0 and v1
     v0 = v1;
     v1 = 0;
-    for (int i = 0; i < m * n; i++) v1 += norm(rdata[i]);
+    for (int i = 0; i < m * n; i++) v1 += std::norm(rdata[i]);
     // beta = v1/v0;
     double beta = v1 / v0;
     // d = r + beta d
@@ -153,9 +153,9 @@ int fdct_usfft_invsepangle(double XL1, double XL2, int nbangles,
 
 //--------------------------------------------
 int fdct_usfft_makeToeplitz(double XL1, double XL2, int nbangles,
-                            vector<vector<CpxNumVec> >& Lambda,
-                            map<int, fftw_plan>& f1map,
-                            map<int, fftw_plan>& b1map) {
+                            std::vector<std::vector<CpxNumVec> >& Lambda,
+                            std::map<int, fftw_plan>& f1map,
+                            std::map<int, fftw_plan>& b1map) {
   int XS1, XS2;
   int XF1, XF2;
   double XR1, XR2;
@@ -192,7 +192,7 @@ int fdct_usfft_makeToeplitz(double XL1, double XL2, int nbangles,
     int yh = yn / 2;
 
     // allocate memory
-    vector<CpxNumVec>& curLambda = Lambda[q];
+    std::vector<CpxNumVec>& curLambda = Lambda[q];
     curLambda.resize(xn);  // xn columns
 
     for (int xcur = xf; xcur < xe; xcur++) {  // for each line construct lambda
@@ -222,7 +222,7 @@ int fdct_usfft_makeToeplitz(double XL1, double XL2, int nbangles,
           wsft(yid, w) = pou;
         }
       }
-      // construct vector
+      // construct std::vector
       for (int i = 0; i < yn; i++)
         for (int j = 0; j < nd; j++)
           wsft(i, j) = wsft(i, j) * wsft(i, j);  // squaring
@@ -235,7 +235,7 @@ int fdct_usfft_makeToeplitz(double XL1, double XL2, int nbangles,
       assert(N % 2 == 1);
       // fftw plan
       fftw_plan fp = NULL;
-      map<int, fftw_plan>::iterator fit = f1map.find(N);
+      std::map<int, fftw_plan>::iterator fit = f1map.find(N);
       if (fit != f1map.end()) {
         fp = (*fit).second;
       } else {
@@ -259,7 +259,7 @@ int fdct_usfft_makeToeplitz(double XL1, double XL2, int nbangles,
         }  // scaling
         for (int k = 0; k < N; k++) {
           double phase = -2 * M_PI * k / double(N) * off(0, w);
-          feq(k) = tmp(k) * polar(1.0, phase);
+          feq(k) = tmp(k) * std::polar(1.0, phase);
         }
         for (int k = 0; k < N; k++) sum(k) += feq(k);
       }  // all the wedges
@@ -274,11 +274,11 @@ int fdct_usfft_makeToeplitz(double XL1, double XL2, int nbangles,
         tt(k) = sum(k);
       }
       for (int k = 1; k < N; k++) {
-        tt(2 * N - 1 - k) = conj(sum(k));
+        tt(2 * N - 1 - k) = std::conj(sum(k));
       }
       // do ifft on it and store
       fftw_plan bp = NULL;
-      map<int, fftw_plan>::iterator bit = b1map.find(2 * N - 1);
+      std::map<int, fftw_plan>::iterator bit = b1map.find(2 * N - 1);
       if (bit != b1map.end()) {
         bp = (*bit).second;
       } else {
@@ -297,9 +297,9 @@ int fdct_usfft_makeToeplitz(double XL1, double XL2, int nbangles,
 }
 
 int fdct_usfft_multToeplitz(double XL1, double XL2, int nbangles,
-                            vector<vector<CpxNumVec> >& Lambda, CpxOffMat& d,
-                            CpxOffMat& z, map<int, fftw_plan>& f1map,
-                            map<int, fftw_plan>& b1map) {
+                            std::vector<std::vector<CpxNumVec> >& Lambda, CpxOffMat& d,
+                            CpxOffMat& z, std::map<int, fftw_plan>& f1map,
+                            std::map<int, fftw_plan>& b1map) {
   int XS1, XS2;
   int XF1, XF2;
   double XR1, XR2;
@@ -341,7 +341,7 @@ int fdct_usfft_multToeplitz(double XL1, double XL2, int nbangles,
     if (yn % 2 == 0) yn++;
     // int xh = xn/2;	 int yh = yn/2;
 
-    vector<CpxNumVec>& curLambda = Lambda[q];
+    std::vector<CpxNumVec>& curLambda = Lambda[q];
 
     // for each line
     for (int xcur = xf; xcur < xe; xcur++) {  // for each line construct lambda
@@ -350,7 +350,7 @@ int fdct_usfft_multToeplitz(double XL1, double XL2, int nbangles,
       int F = XF2;
       assert(N % 2 == 1);
 
-      map<int, fftw_plan>::iterator fit;
+      std::map<int, fftw_plan>::iterator fit;
       fftw_plan sfp = NULL;
       fit = f1map.find(N);
       if (fit != f1map.end()) {
@@ -368,7 +368,7 @@ int fdct_usfft_multToeplitz(double XL1, double XL2, int nbangles,
                                FFTW_ESTIMATE | FFTW_IN_PLACE);
         f1map[2 * N - 1] = lfp;
       }
-      map<int, fftw_plan>::iterator bit;
+      std::map<int, fftw_plan>::iterator bit;
       fftw_plan sbp = NULL;
       bit = b1map.find(N);
       if (bit != b1map.end()) {

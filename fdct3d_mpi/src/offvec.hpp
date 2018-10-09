@@ -89,8 +89,8 @@ class OffVec {
   F* data() const { return _data; }
 };
 
-// INPUT template <class F> inline istream& operator>>(istream& is, OffVec<F>&
-// vec) OUTPUT template <class F> inline ostream& operator<<(ostream& os, const
+// INPUT template <class F> inline std::istream& operator>>(std::istream& is, OffVec<F>&
+// vec) OUTPUT template <class F> inline std::ostream& operator<<(std::ostream& os, const
 // OffVec<F>& vec)
 
 template <class F>

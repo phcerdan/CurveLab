@@ -8,10 +8,6 @@
 
 #include "fdct_usfft_inc.hpp"
 
-using std::endl;
-using std::ios_base;
-using std::istream;
-using std::ostream;
 
 FDCT_USFFT_NS_BEGIN_NAMESPACE
 
@@ -94,7 +90,7 @@ class NumVec {
 
 // INPUT
 template <class F>
-inline istream& operator>>(istream& is, NumVec<F>& vec) {
+inline std::istream& operator>>(std::istream& is, NumVec<F>& vec) {
   int m;
   is >> m;
   vec.resize(m);
@@ -104,9 +100,9 @@ inline istream& operator>>(istream& is, NumVec<F>& vec) {
 
 // OUTPUT
 template <class F>
-inline ostream& operator<<(ostream& os, const NumVec<F>& vec) {
-  os << vec.m() << endl;
-  for (int i = 0; i < vec.m(); i++) os << " " << vec(i) << endl;
+inline std::ostream& operator<<(std::ostream& os, const NumVec<F>& vec) {
+  os << vec.m() << std::endl;
+  for (int i = 0; i < vec.m(); i++) os << " " << vec(i) << std::endl;
   return os;
 }
 

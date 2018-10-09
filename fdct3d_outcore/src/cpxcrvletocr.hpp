@@ -10,26 +10,26 @@
 
 class CpxCrvletOcr {
  protected:
-  vector<vector<int> > _nxs, _nys, _nzs;
+  std::vector<std::vector<int> > _nxs, _nys, _nzs;
   char _name[100];
   int _maxnb;
   int _count;
 
   int _clock;
-  vector<vector<CpxNumTns> > _blocks;
-  vector<vector<int> > _szvec;
-  vector<vector<int> > _tmvec;
+  std::vector<std::vector<CpxNumTns> > _blocks;
+  std::vector<std::vector<int> > _szvec;
+  std::vector<std::vector<int> > _tmvec;
 
  public:
   CpxCrvletOcr(const char* name);  //  CpxCrvletOcr(const CpxCrvletOcr& D);
   ~CpxCrvletOcr();  //  CpxCrvletOcr& operator=(const CpxCrvletOcr& D);
-  int setup(vector<vector<int> > nxs, vector<vector<int> > nys,
-            vector<vector<int> > nzs, int ma);
+  int setup(std::vector<std::vector<int> > nxs, std::vector<std::vector<int> > nys,
+            std::vector<std::vector<int> > nzs, int ma);
   CpxNumTns& block(int s, int w);
   // access
-  vector<vector<int> >& nxs() { return _nxs; }
-  vector<vector<int> >& nys() { return _nys; }
-  vector<vector<int> >& nzs() { return _nzs; }
+  std::vector<std::vector<int> >& nxs() { return _nxs; }
+  std::vector<std::vector<int> >& nys() { return _nys; }
+  std::vector<std::vector<int> >& nzs() { return _nzs; }
 };
 
 #endif

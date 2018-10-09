@@ -159,7 +159,7 @@ inline double energy(CpxOffVec& m) {
   cpx* data = m.data();
   for (int i = 0; i < m.m();
        i++) {  // val += data[i].re*data[i].re + data[i].im*data[i].im;
-    val += norm(data[i]);
+    val += std::norm(data[i]);
   }
   return val;
 }
@@ -168,7 +168,7 @@ inline double energy(CpxOffMat& m) {
   cpx* data = m.data();
   for (int i = 0; i < m.m() * m.n();
        i++) {  // val += data[i].re*data[i].re + data[i].im*data[i].im;
-    val += norm(data[i]);
+    val += std::norm(data[i]);
   }
   return val;
 }
@@ -177,7 +177,7 @@ inline double energy(CpxOffTns& m) {
   cpx* data = m.data();
   for (int i = 0; i < m.m() * m.n() * m.p();
        i++) {  // val += data[i].re*data[i].re + data[i].im*data[i].im;
-    val += norm(data[i]);
+    val += std::norm(data[i]);
   }
   return val;
 }
@@ -187,7 +187,7 @@ inline double energy(CpxNumVec& m) {
   cpx* data = m.data();
   for (int i = 0; i < m.m();
        i++) {  // val += data[i].re*data[i].re + data[i].im*data[i].im;
-    val += norm(data[i]);
+    val += std::norm(data[i]);
   }
   return val;
 }
@@ -196,7 +196,7 @@ inline double energy(CpxNumMat& m) {
   cpx* data = m.data();
   for (int i = 0; i < m.m() * m.n();
        i++) {  // val += data[i].re*data[i].re + data[i].im*data[i].im;
-    val += norm(data[i]);
+    val += std::norm(data[i]);
   }
   return val;
 }
@@ -205,7 +205,7 @@ inline double energy(CpxNumTns& m) {
   cpx* data = m.data();
   for (int i = 0; i < m.m() * m.n() * m.p();
        i++) {  // val += data[i].re*data[i].re + data[i].im*data[i].im;
-    val += norm(data[i]);
+    val += std::norm(data[i]);
   }
   return val;
 }

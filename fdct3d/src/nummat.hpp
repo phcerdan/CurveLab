@@ -88,7 +88,7 @@ class NumMat {
 
 // INPUT
 template <class F>
-inline istream& operator>>(istream& is, NumMat<F>& mat) {
+inline std::istream& operator>>(std::istream& is, NumMat<F>& mat) {
   int m, n;
   is >> m >> n;
   mat.resize(m, n);
@@ -99,12 +99,12 @@ inline istream& operator>>(istream& is, NumMat<F>& mat) {
 
 // OUTPUT
 template <class F>
-inline ostream& operator<<(ostream& os, const NumMat<F>& mat) {
-  os << mat.m() << " " << mat.n() << endl;
-  os.setf(ios_base::scientific, ios_base::floatfield);
+inline std::ostream& operator<<(std::ostream& os, const NumMat<F>& mat) {
+  os << mat.m() << " " << mat.n() << std::endl;
+  os.setf(std::ios_base::scientific, std::ios_base::floatfield);
   for (int i = 0; i < mat.m(); i++) {
     for (int j = 0; j < mat.n(); j++) os << " " << mat(i, j);
-    os << endl;
+    os << std::endl;
   }
   return os;
 }

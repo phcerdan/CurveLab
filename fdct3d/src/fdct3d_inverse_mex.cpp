@@ -29,7 +29,7 @@ void mexFunction(int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[]) {
   mex2cpp(prhs[4], nbdstz_coarse);
   int allcurvelets;
   mex2cpp(prhs[5], allcurvelets);
-  vector<vector<CpxNumTns> > c;
+  std::vector<std::vector<CpxNumTns> > c;
   mex2cpp(prhs[6], c);
 
   CpxNumTns x;

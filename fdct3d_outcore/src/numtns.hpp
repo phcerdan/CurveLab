@@ -91,8 +91,8 @@ class NumTns {
   F* data() const { return _data; }
 };
 
-// template <class F> inline istream& operator>>(istream& is, NumTns<F>& tns);
-// template <class F> inline ostrema& operator<<(ostream& os, const NumTns<F>&
+// template <class F> inline std::istream& operator>>(std::istream& is, NumTns<F>& tns);
+// template <class F> inline ostrema& operator<<(std::ostream& os, const NumTns<F>&
 // tns);
 template <class F>
 inline void setvalue(NumTns<F>& T, F val) {

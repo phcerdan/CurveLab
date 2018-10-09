@@ -29,8 +29,8 @@ void mexFunction(int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[]) {
   int allcurvelets;
   mex2cpp(prhs[5], allcurvelets);
 
-  vector<vector<double> > fxs, fys, fzs;
-  vector<vector<int> > nxs, nys, nzs;
+  std::vector<std::vector<double> > fxs, fys, fzs;
+  std::vector<std::vector<int> > nxs, nys, nzs;
   fdct3d_param(m, n, p, nbscales, nbdstz_coarse, allcurvelets, fxs, fys, fzs,
                nxs, nys, nzs);
 

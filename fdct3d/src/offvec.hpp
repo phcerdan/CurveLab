@@ -89,7 +89,7 @@ class OffVec {
 
 /*
 //INPUT
-template <class F> inline istream& operator>>(istream& is, OffVec<F>& vec)
+template <class F> inline std::istream& operator>>(std::istream& is, OffVec<F>& vec)
 {
   int m; is>>m;
   vec.resize(m);
@@ -101,10 +101,10 @@ template <class F> inline istream& operator>>(istream& is, OffVec<F>& vec)
 
 // OUTPUT
 template <class F>
-inline ostream& operator<<(ostream& os, const OffVec<F>& vec) {
-  os << vec.m() << " " << vec.s() << endl;
-  os.setf(ios_base::scientific, ios_base::floatfield);
-  for (int i = vec.s(); i < vec.s() + vec.m(); i++) os << " " << vec(i) << endl;
+inline std::ostream& operator<<(std::ostream& os, const OffVec<F>& vec) {
+  os << vec.m() << " " << vec.s() << std::endl;
+  os.setf(std::ios_base::scientific, std::ios_base::floatfield);
+  for (int i = vec.s(); i < vec.s() + vec.m(); i++) os << " " << vec(i) << std::endl;
   return os;
 }
 

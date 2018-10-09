@@ -9,21 +9,21 @@
 FDCT_WRAPPING_NS_BEGIN_NAMESPACE
 
 int fdct_wrapping_param_sepangle(double XL1, double XL2, int nbangle,
-                                 vector<double>& sx, vector<double>& sy,
-                                 vector<double>& fx, vector<double>& fy,
-                                 vector<int>& nx, vector<int>& ny);
-int fdct_wrapping_param_wavelet(int N1, int N2, vector<double>& sx,
-                                vector<double>& sy, vector<double>& fx,
-                                vector<double>& fy, vector<int>& nx,
-                                vector<int>& ny);
+                                 std::vector<double>& sx, std::vector<double>& sy,
+                                 std::vector<double>& fx, std::vector<double>& fy,
+                                 std::vector<int>& nx, std::vector<int>& ny);
+int fdct_wrapping_param_wavelet(int N1, int N2, std::vector<double>& sx,
+                                std::vector<double>& sy, std::vector<double>& fx,
+                                std::vector<double>& fy, std::vector<int>& nx,
+                                std::vector<int>& ny);
 
 //--------------------------------------------------
 int fdct_wrapping_param(int N1, int N2, int nbscales, int nbangles_coarse,
-                        int allcurvelets, vector<vector<double> >& sx,
-                        vector<vector<double> >& sy,
-                        vector<vector<double> >& fx,
-                        vector<vector<double> >& fy, vector<vector<int> >& nx,
-                        vector<vector<int> >& ny) {
+                        int allcurvelets, std::vector<std::vector<double> >& sx,
+                        std::vector<std::vector<double> >& sy,
+                        std::vector<std::vector<double> >& fx,
+                        std::vector<std::vector<double> >& fy, std::vector<std::vector<int> >& nx,
+                        std::vector<std::vector<int> >& ny) {
   // sx, sy, step in spatial domain
   // fx, fy, position in frequency domain
   // nx, ny, size of the grid
@@ -34,7 +34,7 @@ int fdct_wrapping_param(int N1, int N2, int nbscales, int nbangles_coarse,
   nx.resize(nbscales);
   ny.resize(nbscales);
 
-  vector<int> nbangles(nbscales);
+  std::vector<int> nbangles(nbscales);
   if (allcurvelets == 1) {
     // nbangles
     nbangles[0] = 1;
@@ -89,9 +89,9 @@ int fdct_wrapping_param(int N1, int N2, int nbscales, int nbangles_coarse,
 
 //--------------------------------------------------
 int fdct_wrapping_param_sepangle(double XL1, double XL2, int nbangle,
-                                 vector<double>& sx, vector<double>& sy,
-                                 vector<double>& fx, vector<double>& fy,
-                                 vector<int>& nx, vector<int>& ny) {
+                                 std::vector<double>& sx, std::vector<double>& sy,
+                                 std::vector<double>& fx, std::vector<double>& fy,
+                                 std::vector<int>& nx, std::vector<int>& ny) {
   fx.resize(nbangle);
   fy.resize(nbangle);
   nx.resize(nbangle);
@@ -152,10 +152,10 @@ int fdct_wrapping_param_sepangle(double XL1, double XL2, int nbangle,
 }
 
 //--------------------------------------------------
-int fdct_wrapping_param_wavelet(int S1, int S2, vector<double>& sx,
-                                vector<double>& sy, vector<double>& fx,
-                                vector<double>& fy, vector<int>& nx,
-                                vector<int>& ny) {
+int fdct_wrapping_param_wavelet(int S1, int S2, std::vector<double>& sx,
+                                std::vector<double>& sy, std::vector<double>& fx,
+                                std::vector<double>& fy, std::vector<int>& nx,
+                                std::vector<int>& ny) {
   fx.resize(1);
   fx[0] = 0;
   fy.resize(1);

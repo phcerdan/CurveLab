@@ -95,8 +95,8 @@ class OffMat {
   F* data() const { return _data; }
 };
 
-// INPUT template <class F> inline istream& operator>>(istream& is, OffMat<F>&
-// vec) OUTPUT template <class F> inline ostream& operator<<( ostream& os, const
+// INPUT template <class F> inline std::istream& operator>>(std::istream& is, OffMat<F>&
+// vec) OUTPUT template <class F> inline std::ostream& operator<<( std::ostream& os, const
 // OffMat<F>& mat)
 
 template <class F>

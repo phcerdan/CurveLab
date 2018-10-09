@@ -16,6 +16,7 @@
 #include <cmath>
 #include <complex>
 #include <string>
+#include <cstring>
 
 #include <algorithm>
 #include <deque>
@@ -25,7 +26,6 @@
 #include <utility>
 #include <vector>
 // using namespace std;
-#include <string.h>
 // FFT stuff
 #include "fftw.h"
 

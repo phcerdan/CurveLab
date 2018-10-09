@@ -9,18 +9,18 @@
 FDCT_USFFT_NS_BEGIN_NAMESPACE
 
 int fdct_usfft_param_sepangle(double XL1, double XL2, int nbangle,
-                              vector<dbl2>& sx, vector<dbl2>& sy,
-                              vector<double>& fx, vector<double>& fy,
-                              vector<int>& nx, vector<int>& ny);
-int fdct_usfft_param_wavelet(int N1, int N2, vector<dbl2>& sx, vector<dbl2>& sy,
-                             vector<double>& fx, vector<double>& fy,
-                             vector<int>& nx, vector<int>& ny);
+                              std::vector<dbl2>& sx, std::vector<dbl2>& sy,
+                              std::vector<double>& fx, std::vector<double>& fy,
+                              std::vector<int>& nx, std::vector<int>& ny);
+int fdct_usfft_param_wavelet(int N1, int N2, std::vector<dbl2>& sx, std::vector<dbl2>& sy,
+                             std::vector<double>& fx, std::vector<double>& fy,
+                             std::vector<int>& nx, std::vector<int>& ny);
 
 //----------------------------------------------------------------------
 int fdct_usfft_param(int N1, int N2, int nbscales, int nbangles_coarse, int ac,
-                     vector<vector<dbl2> >& sx, vector<vector<dbl2> >& sy,
-                     vector<vector<double> >& fx, vector<vector<double> >& fy,
-                     vector<vector<int> >& nx, vector<vector<int> >& ny) {
+                     std::vector<std::vector<dbl2> >& sx, std::vector<std::vector<dbl2> >& sy,
+                     std::vector<std::vector<double> >& fx, std::vector<std::vector<double> >& fy,
+                     std::vector<std::vector<int> >& nx, std::vector<std::vector<int> >& ny) {
   sx.resize(nbscales);
   sy.resize(nbscales);
   fx.resize(nbscales);
@@ -30,7 +30,7 @@ int fdct_usfft_param(int N1, int N2, int nbscales, int nbangles_coarse, int ac,
 
   if (ac == 1) {
     // nbangles
-    vector<int> nbangles(nbscales);
+    std::vector<int> nbangles(nbscales);
     nbangles[0] = 1;
     for (int sc = 1; sc < nbscales; sc++)
       nbangles[sc] = nbangles_coarse * pow2(int(ceil(double(sc - 1) / 2)));
@@ -53,7 +53,7 @@ int fdct_usfft_param(int N1, int N2, int nbscales, int nbangles_coarse, int ac,
                              ny[0]);
   } else {
     // nbangles
-    vector<int> nbangles(nbscales);
+    std::vector<int> nbangles(nbscales);
     nbangles[0] = 1;
     for (int sc = 1; sc < nbscales - 1; sc++)
       nbangles[sc] = nbangles_coarse * pow2(int(ceil(double(sc - 1) / 2)));
@@ -84,9 +84,9 @@ int fdct_usfft_param(int N1, int N2, int nbscales, int nbangles_coarse, int ac,
 }
 
 int fdct_usfft_param_sepangle(double XL1, double XL2, int nbangle,
-                              vector<dbl2>& sx, vector<dbl2>& sy,
-                              vector<double>& fx, vector<double>& fy,
-                              vector<int>& nx, vector<int>& ny) {
+                              std::vector<dbl2>& sx, std::vector<dbl2>& sy,
+                              std::vector<double>& fx, std::vector<double>& fy,
+                              std::vector<int>& nx, std::vector<int>& ny) {
   fx.resize(nbangle);
   fy.resize(nbangle);
   nx.resize(nbangle);
@@ -179,9 +179,9 @@ int fdct_usfft_param_sepangle(double XL1, double XL2, int nbangle,
   return 0;
 }
 
-int fdct_usfft_param_wavelet(int N1, int N2, vector<dbl2>& sx, vector<dbl2>& sy,
-                             vector<double>& fx, vector<double>& fy,
-                             vector<int>& nx, vector<int>& ny) {
+int fdct_usfft_param_wavelet(int N1, int N2, std::vector<dbl2>& sx, std::vector<dbl2>& sy,
+                             std::vector<double>& fx, std::vector<double>& fy,
+                             std::vector<int>& nx, std::vector<int>& ny) {
   fx.resize(1);
   fx[0] = 0;
   fy.resize(1);

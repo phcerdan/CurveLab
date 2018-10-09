@@ -15,8 +15,8 @@
 #include <cmath>
 #include <complex>
 #include <string>
+#include <cstring>
 
-#include <string.h>
 #include <algorithm>
 #include <deque>
 #include <map>

@@ -103,8 +103,8 @@ class OffTns {
   F* data() const { return _data; }
 };
 
-// template <class F> inline istream& operator>>(istream& is, OffTns<F>& tns);
-// template <class F> inline ostrema& operator<<(ostream& os, const OffTns<F>&
+// template <class F> inline std::istream& operator>>(std::istream& is, OffTns<F>& tns);
+// template <class F> inline ostrema& operator<<(std::ostream& os, const OffTns<F>&
 // tns);
 template <class F>
 inline void setvalue(OffTns<F>& T, F val) {

@@ -9,16 +9,16 @@
 using namespace std;
 using namespace fdct_wrapping_ns;
 
-int optionsCreate(const char* optfile, map<string, string>& options) {
+int optionsCreate(const char* optfile, std::map<std::string, std::string>& options) {
   options.clear();
-  ifstream fin(optfile);
+  std::ifstream fin(optfile);
   assert(fin.good());
-  string name;
+  std::string name;
   fin >> name;
   while (fin.good()) {
     char cont[100];
     fin.getline(cont, 99);
-    options[name] = string(cont);
+    options[name] = std::string(cont);
     fin >> name;
   }
   fin.close();
@@ -30,24 +30,24 @@ int main(int argc, char** argv) {
 
   assert(argc == 2);
   // get options
-  map<string, string> opts;
+  std::map<std::string, std::string> opts;
   optionsCreate(argv[1], opts);
 
   // get input data
-  map<string, string>::iterator mi;
+  std::map<std::string, std::string>::iterator mi;
 
   int m;
   mi = opts.find("-m");
   assert(mi != opts.end());
   {
-    istringstream ss((*mi).second);
+    std::istringstream ss((*mi).second);
     ss >> m;
   }
   int n;
   mi = opts.find("-n");
   assert(mi != opts.end());
   {
-    istringstream ss((*mi).second);
+    std::istringstream ss((*mi).second);
     ss >> n;
   }
 
@@ -55,7 +55,7 @@ int main(int argc, char** argv) {
   mi = opts.find("-nbscales");
   assert(mi != opts.end());
   {
-    istringstream ss((*mi).second);
+    std::istringstream ss((*mi).second);
     ss >> nbscales;
   }
 
@@ -63,7 +63,7 @@ int main(int argc, char** argv) {
   mi = opts.find("-nbangles_coarse");
   assert(mi != opts.end());
   {
-    istringstream ss((*mi).second);
+    std::istringstream ss((*mi).second);
     ss >> nbangles_coarse;
   }
 
@@ -71,7 +71,7 @@ int main(int argc, char** argv) {
   mi = opts.find("-ac");
   assert(mi != opts.end());
   {
-    istringstream ss((*mi).second);
+    std::istringstream ss((*mi).second);
     ss >> ac;
   }
 
@@ -83,11 +83,11 @@ int main(int argc, char** argv) {
   ck0 = clock();
 
   // fdct_wrapping_
-  vector<vector<CpxNumMat> > c;  // vector<int> extra;
+  std::vector<std::vector<CpxNumMat> > c;  // std::vector<int> extra;
   fdct_wrapping(m, n, nbscales, nbangles_coarse, ac, x, c);
   ck1 = clock();
-  cout << "FDCT_WRAPPING_  takes " << double(ck1 - ck0) / CLOCKS_PER_SEC
-       << " seconds" << endl;
+  std::cout << "FDCT_WRAPPING_  takes " << double(ck1 - ck0) / CLOCKS_PER_SEC
+       << " seconds" << std::endl;
   ck0 = ck1;
 
   // ifdct_wrapping_
@@ -95,18 +95,18 @@ int main(int argc, char** argv) {
   clear(y);
   ifdct_wrapping(m, n, nbscales, nbangles_coarse, ac, c, y);
   ck1 = clock();
-  cout << "IFDCT_WRAPPING_ takes " << double(ck1 - ck0) / CLOCKS_PER_SEC
-       << " seconds" << endl;
+  std::cout << "IFDCT_WRAPPING_ takes " << double(ck1 - ck0) / CLOCKS_PER_SEC
+       << " seconds" << std::endl;
   ck0 = ck1;
 
   CpxNumMat e(m, n);
   for (int i = 0; i < m; i++)
     for (int j = 0; j < n; j++) e(i, j) = x(i, j) - y(i, j);
-  cerr << "accuracy of inversion " << sqrt(energy(e) / (m * n)) << endl;
+  std::cerr << "accuracy of inversion " << sqrt(energy(e) / (m * n)) << std::endl;
 
-  vector<vector<double> > sx, sy;
-  vector<vector<double> > fx, fy;
-  vector<vector<int> > nx, ny;
+  std::vector<std::vector<double> > sx, sy;
+  std::vector<std::vector<double> > fx, fy;
+  std::vector<std::vector<int> > nx, ny;
   fdct_wrapping_param(m, n, nbscales, nbangles_coarse, ac, sx, sy, fx, fy, nx,
                       ny);
 

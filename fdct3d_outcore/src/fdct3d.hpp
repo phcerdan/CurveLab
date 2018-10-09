@@ -44,9 +44,9 @@ int fdct3d_inverse(int m, int n, int p, int nbscales, int nbdstz_coarse,
 //  x -- N1 by N2 by N3 tensor
 
 int fdct3d_param(int m, int n, int p, int nbscales, int nbdstz_coarse,
-                 vector<vector<double> >& fxs, vector<vector<double> >& fys,
-                 vector<vector<double> >& fzs, vector<vector<int> >& nxs,
-                 vector<vector<int> >& nys, vector<vector<int> >& nzs);
+                 std::vector<std::vector<double> >& fxs, std::vector<std::vector<double> >& fys,
+                 std::vector<std::vector<double> >& fzs, std::vector<std::vector<int> >& nxs,
+                 std::vector<std::vector<int> >& nys, std::vector<std::vector<int> >& nzs);
 // this function obtains auxiliary information about curvelet transform
 // INPUTS:
 //  N1,N2,N3 -- the size of the input data

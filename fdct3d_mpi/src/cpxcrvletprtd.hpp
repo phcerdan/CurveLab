@@ -12,32 +12,32 @@
 // Complex Curvelet Partitioned
 class CpxCrvletPrtd {
  protected:
-  vector<vector<int> > _nx, _ny, _nz;  // size of
-  vector<vector<int> > _owners;
-  vector<vector<int> > _sizes;
-  vector<vector<bool> > _exists;
-  vector<vector<CpxNumTns> > _blocks;
+  std::vector<std::vector<int> > _nx, _ny, _nz;  // size of
+  std::vector<std::vector<int> > _owners;
+  std::vector<std::vector<int> > _sizes;
+  std::vector<std::vector<bool> > _exists;
+  std::vector<std::vector<CpxNumTns> > _blocks;
 
  public:
   CpxCrvletPrtd() { ; }
   CpxCrvletPrtd(const CpxCrvletPrtd& D);
   ~CpxCrvletPrtd() { ; }
   CpxCrvletPrtd& operator=(const CpxCrvletPrtd& D);
-  int setup(vector<vector<int> > nx, vector<vector<int> > ny,
-            vector<vector<int> > nz, vector<vector<int> >& owners);
-  int expand(vector<vector<bool> >& newexists);
-  int scatter(vector<vector<bool> >& newexists);
-  int shift(vector<vector<int> >& newowners);
+  int setup(std::vector<std::vector<int> > nx, std::vector<std::vector<int> > ny,
+            std::vector<std::vector<int> > nz, std::vector<std::vector<int> >& owners);
+  int expand(std::vector<std::vector<bool> >& newexists);
+  int scatter(std::vector<std::vector<bool> >& newexists);
+  int shift(std::vector<std::vector<int> >& newowners);
   int discard();
   int combine();
   // access
-  vector<vector<int> >& nx() { return _nx; }
-  vector<vector<int> >& ny() { return _ny; }
-  vector<vector<int> >& nz() { return _nz; }
+  std::vector<std::vector<int> >& nx() { return _nx; }
+  std::vector<std::vector<int> >& ny() { return _ny; }
+  std::vector<std::vector<int> >& nz() { return _nz; }
 
-  vector<vector<int> >& owners() { return _owners; }
-  vector<vector<int> >& sizes() { return _sizes; }
-  vector<vector<bool> >& exists() { return _exists; }
+  std::vector<std::vector<int> >& owners() { return _owners; }
+  std::vector<std::vector<int> >& sizes() { return _sizes; }
+  std::vector<std::vector<bool> >& exists() { return _exists; }
 
   CpxNumTns& block(int s, int w) {
     assert(_exists[s][w] == true);

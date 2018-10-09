@@ -62,7 +62,7 @@ int main(int argc, char** argv) {
       }
   double xene = X.globalenergy();
   iC(PetscPrintf(MPI_COMM_WORLD, "energy %e\n",
-                 xene));  //  if(mpirank==0)	 cerr<<"X energy  "<<xene<<endl;
+                 xene));  //  if(mpirank==0)	 std::cerr<<"X energy  "<<xene<<std::endl;
 
   time_t tm0, tm1;
   tm0 = time(NULL);
@@ -113,8 +113,8 @@ int main(int argc, char** argv) {
                   CpxNumTns& A = C.block(s,w);		  CpxNumTns& B =
   C.block(s,w+nw/2); double maxerr = 0; for(int i=0; i<A.m(); i++)
   for(int j=0; j<A.n(); j++)				for(int k=0; k<A.p();
-  k++) maxerr = max(maxerr, abs(A(i,j,k)-conj(B(i,j,k)))); cerr<<s<<" "<<w<<"
-  "<<maxerr<<endl;
+  k++) maxerr = std::max(maxerr, abs(A(i,j,k)-std::conj(B(i,j,k)))); std::cerr<<s<<" "<<w<<"
+  "<<maxerr<<std::endl;
                 }
          }
   }

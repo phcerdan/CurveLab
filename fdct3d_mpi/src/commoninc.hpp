@@ -24,13 +24,13 @@
 #include <set>
 #include <utility>
 #include <vector>
-using namespace std;
+#include <cstring>
 
 // FFT stuff
 #include "fftw.h"
 
 // typedef double double;
-typedef complex<double> cpx;
+typedef std::complex<double> cpx;
 
 // AUX functions
 inline int pow2(int l) {

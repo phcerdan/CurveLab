@@ -7,7 +7,7 @@
 #define _FDCT3DINC_HPP_
 
 // STL stuff
-#include <string.h>
+#include <cstring>
 #include <cassert>
 #include <cfloat>
 #include <cmath>
@@ -24,13 +24,12 @@
 #include <set>
 #include <utility>
 #include <vector>
-using namespace std;
 
 // FFT stuff
 #include "fftw.h"
 
 // typedef double double;
-typedef complex<double> cpx;
+typedef std::complex<double> cpx;
 
 // AUX functions
 inline int pow2(int l) {

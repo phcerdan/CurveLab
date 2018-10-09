@@ -20,11 +20,11 @@ inline void cpp2mex(
     CpxOffTns& cd,
     mxArray*& md);  // inline void cpp2mex(const CpxOffTns& cd, mxArray*& md);
 template <class T>
-inline void mex2cpp(const mxArray*& md, vector<T>& cd);
+inline void mex2cpp(const mxArray*& md, std::vector<T>& cd);
 template <class T>
 inline void cpp2mex(
-    vector<T>& cd, mxArray*& md);  // template <class T> inline void
-                                   // cpp2mex(const vector<T>& cd, mxArray*& md);
+    std::vector<T>& cd, mxArray*& md);  // template <class T> inline void
+                                   // cpp2mex(const std::vector<T>& cd, mxArray*& md);
 
 //----------------------int
 inline void mex2cpp(const mxArray*& md, int& cd) {
@@ -104,8 +104,8 @@ inline void cpp2mex(CpxOffTns& cd, mxArray*& md) {
   for (int k = u; k < u + p; k++)
     for (int j = t; j < t + n; j++)
       for (int i = s; i < s + m; i++) {
-        xr[cnt] = real(cd(i, j, k));
-        xi[cnt] = imag(cd(i, j, k));
+        xr[cnt] = std::real(cd(i, j, k));
+        xi[cnt] = std::imag(cd(i, j, k));
         cnt++;
       }
   cd.resize(0, 0, 0);
@@ -164,17 +164,17 @@ inline void cpp2mex(CpxNumTns& cd, mxArray*& md) {
   for (int k = 0; k < p; k++)
     for (int j = 0; j < n; j++)
       for (int i = 0; i < m; i++) {
-        xr[cnt] = real(cd(i, j, k));
-        xi[cnt] = imag(cd(i, j, k));
+        xr[cnt] = std::real(cd(i, j, k));
+        xi[cnt] = std::imag(cd(i, j, k));
         cnt++;
       }
   cd.resize(0, 0, 0);
   return;
 }
 
-//----------------------vector<...>
+//----------------------std::vector<...>
 template <class T>
-inline void mex2cpp(const mxArray*& md, vector<T>& cd) {
+inline void mex2cpp(const mxArray*& md, std::vector<T>& cd) {
   int m = mxGetM(md);
   int n = mxGetN(md);
   assert(n == 1);
@@ -186,7 +186,7 @@ inline void mex2cpp(const mxArray*& md, vector<T>& cd) {
   return;
 }
 template <class T>
-inline void cpp2mex(vector<T>& cd, mxArray*& md) {
+inline void cpp2mex(std::vector<T>& cd, mxArray*& md) {
   int n = cd.size();
   md = mxCreateCellMatrix(n, 1);
   for (int ci = 0; ci < n; ci++) {

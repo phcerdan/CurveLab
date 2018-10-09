@@ -11,14 +11,6 @@
 #include "numvec.hpp"
 #include "offmat.hpp"
 #include "offvec.hpp"
-using std::abs;
-using std::map;
-using std::max;
-using std::min;
-using std::pair;
-using std::polar;
-using std::sort;
-using std::vector;
 
 FDCT_USFFT_NS_BEGIN_NAMESPACE
 
@@ -29,7 +21,7 @@ struct dbl2 {
 };
 
 int fdct_usfft(int N1, int N2, int nbscales, int nbangles_coarse, int ac,
-               CpxNumMat& x, vector<vector<CpxNumMat> >& c);
+               CpxNumMat& x, std::vector<std::vector<CpxNumMat> >& c);
 // this function performs the forward curvelet transform
 // INPUTS:
 //  N1,N2 -- the size of the input image
@@ -42,7 +34,7 @@ int fdct_usfft(int N1, int N2, int nbscales, int nbangles_coarse, int ac,
 //  and indices (i,j) is accessed by c[s][w](i,j).
 
 int afdct_usfft(int N1, int N2, int nbscales, int nbangles_coarse, int ac,
-                vector<vector<CpxNumMat> >& c, CpxNumMat& x);
+                std::vector<std::vector<CpxNumMat> >& c, CpxNumMat& x);
 // this function performs the adjoint curvelet transform
 // INPUTS:
 //  N1,N2 -- the size of the input image
@@ -55,7 +47,7 @@ int afdct_usfft(int N1, int N2, int nbscales, int nbangles_coarse, int ac,
 //  x -- N1 by N2 matrix stored in CpxNumMat class
 
 int ifdct_usfft(int N1, int N2, int nbscales, int nbangles_coarse, int ac,
-                vector<vector<CpxNumMat> >& c, CpxNumMat& x);
+                std::vector<std::vector<CpxNumMat> >& c, CpxNumMat& x);
 // this function performs the inverse curvelet transform
 // INPUTS:
 //  N1,N2 -- the size of the input image
@@ -68,9 +60,9 @@ int ifdct_usfft(int N1, int N2, int nbscales, int nbangles_coarse, int ac,
 //  x -- N1 by N2 matrix stored in CpxNumMat class
 
 int fdct_usfft_param(int N1, int N2, int nbscales, int nbangles_coarse, int ac,
-                     vector<vector<dbl2> >& sx, vector<vector<dbl2> >& sy,
-                     vector<vector<double> >& fx, vector<vector<double> >& fy,
-                     vector<vector<int> >& nx, vector<vector<int> >& ny);
+                     std::vector<std::vector<dbl2> >& sx, std::vector<std::vector<dbl2> >& sy,
+                     std::vector<std::vector<double> >& fx, std::vector<std::vector<double> >& fy,
+                     std::vector<std::vector<int> >& nx, std::vector<std::vector<int> >& ny);
 // this function obtains auxiliary information about curvelet transform
 // INPUTS:
 //  N1,N2 -- the size of the input image
@@ -80,11 +72,11 @@ int fdct_usfft_param(int N1, int N2, int nbscales, int nbangles_coarse, int ac,
 //  finest level
 // OUTPUTS:
 //  sx -- for scale s and wege w, sx[s][w] gives two doubles denoting the
-//  difference vector of the spatial centers of two
+//  difference std::vector of the spatial centers of two
 //        consecutive curvelets with the same column index (i.e. (i,j) and
 //        (i+1,j))
 //  sx -- for scale s and wege w, sy[s][w] gives two doubles denoting the
-//  difference vector of the spatial centers of two
+//  difference std::vector of the spatial centers of two
 //        consecutive curvelets with the same row index (i.e. (i,j) and (i,j+1))
 //  fx -- for scale s and wege w, fx[s][w] is the first coordinate of the
 //  frequency center of curvelet of scale s and wedge w fy -- for scale s and

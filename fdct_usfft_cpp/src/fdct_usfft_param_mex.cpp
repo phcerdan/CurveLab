@@ -32,12 +32,12 @@ void mexFunction(int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[]) {
   int allcurvelets;
   mex2cpp(prhs[4], allcurvelets);
 
-  vector<vector<dbl2> > sx;
-  vector<vector<dbl2> > sy;
-  vector<vector<double> > fx;
-  vector<vector<double> > fy;
-  vector<vector<int> > nx;
-  vector<vector<int> > ny;
+  std::vector<std::vector<dbl2> > sx;
+  std::vector<std::vector<dbl2> > sy;
+  std::vector<std::vector<double> > fx;
+  std::vector<std::vector<double> > fy;
+  std::vector<std::vector<int> > nx;
+  std::vector<std::vector<int> > ny;
   fdct_usfft_param(N1, N2, nbscales, nbangles_coarse, allcurvelets, sx, sy, fx,
                    fy, nx, ny);
 

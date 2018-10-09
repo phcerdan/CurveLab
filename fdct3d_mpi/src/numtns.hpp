@@ -95,8 +95,8 @@ inline void setvalue(NumTns<F>& T, F val) {
 // template <class F> inline void clear(NumTns<F>& T){  memset(T.data(), 0,
 // T.m()*T.n()*T.p()*sizeof(F));}
 
-// template <class F> inline istream& operator>>(istream& is, NumTns<F>& tns);
-// template <class F> inline ostrema& operator<<(ostream& os, const NumTns<F>&
+// template <class F> inline std::istream& operator>>(std::istream& is, NumTns<F>& tns);
+// template <class F> inline ostrema& operator<<(std::ostream& os, const NumTns<F>&
 // tns);
 
 typedef NumTns<bool> BolNumTns;
@@ -110,7 +110,7 @@ inline double energy(CpxNumTns& t) {
   double val = 0;
   cpx* data = t.data();
   for (int i = 0; i < t.m() * t.n() * t.p(); i++) {
-    val += norm(data[i]);
+    val += std::norm(data[i]);
   }
   return val;
 }

@@ -115,7 +115,7 @@ inline int fdct3d_lowpasscompute(double XL1, double XL2, double XL3,
     fdct3d_window(x, l, r);
     lowpass1(i) = l;
     lowpass1(-i) = l;
-  }  // cerr<<lowpass1;
+  }  // std::cerr<<lowpass1;
   DblOffVec lowpass2(XS2);
   setvalue(lowpass2, 1.0);
   for (int i = -XF2; i < -XR2 / 2; i++) {
@@ -124,7 +124,7 @@ inline int fdct3d_lowpasscompute(double XL1, double XL2, double XL3,
     fdct3d_window(x, l, r);
     lowpass2(i) = l;
     lowpass2(-i) = l;
-  }  // cerr<<lowpass2;
+  }  // std::cerr<<lowpass2;
   DblOffVec lowpass3(XS3);
   setvalue(lowpass3, 1.0);
   for (int i = -XF3; i < -XR3 / 2; i++) {
@@ -133,7 +133,7 @@ inline int fdct3d_lowpasscompute(double XL1, double XL2, double XL3,
     fdct3d_window(x, l, r);
     lowpass3(i) = l;
     lowpass3(-i) = l;
-  }  // cerr<<lowpass3;
+  }  // std::cerr<<lowpass3;
 
   for (int i = -XF1; i < -XF1 + XS1; i++)
     for (int j = -XF2; j < -XF2 + XS2; j++)
@@ -456,7 +456,7 @@ inline double energy(CpxOffVec& m) {
   cpx* data = m.data();
   for (int i = 0; i < m.m();
        i++) {  // val += data[i].re*data[i].re + data[i].im*data[i].im;
-    val += norm(data[i]);
+    val += std::norm(data[i]);
   }
   return val;
 }
@@ -465,7 +465,7 @@ inline double energy(CpxOffMat& m) {
   cpx* data = m.data();
   for (int i = 0; i < m.m() * m.n();
        i++) {  // val += data[i].re*data[i].re + data[i].im*data[i].im;
-    val += norm(data[i]);
+    val += std::norm(data[i]);
   }
   return val;
 }
@@ -474,7 +474,7 @@ inline double energy(CpxOffTns& m) {
   cpx* data = m.data();
   for (int i = 0; i < m.m() * m.n() * m.p();
        i++) {  // val += data[i].re*data[i].re + data[i].im*data[i].im;
-    val += norm(data[i]);
+    val += std::norm(data[i]);
   }
   return val;
 }
@@ -484,7 +484,7 @@ inline double energy(CpxNumVec& m) {
   cpx* data = m.data();
   for (int i = 0; i < m.m();
        i++) {  // val += data[i].re*data[i].re + data[i].im*data[i].im;
-    val += norm(data[i]);
+    val += std::norm(data[i]);
   }
   return val;
 }
@@ -493,7 +493,7 @@ inline double energy(CpxNumMat& m) {
   cpx* data = m.data();
   for (int i = 0; i < m.m() * m.n();
        i++) {  // val += data[i].re*data[i].re + data[i].im*data[i].im;
-    val += norm(data[i]);
+    val += std::norm(data[i]);
   }
   return val;
 }
@@ -502,7 +502,7 @@ inline double energy(CpxNumTns& m) {
   cpx* data = m.data();
   for (int i = 0; i < m.m() * m.n() * m.p();
        i++) {  // val += data[i].re*data[i].re + data[i].im*data[i].im;
-    val += norm(data[i]);
+    val += std::norm(data[i]);
   }
   return val;
 }

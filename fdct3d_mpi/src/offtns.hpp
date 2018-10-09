@@ -125,7 +125,7 @@ inline double energy(CpxOffTns& t) {
   double val = 0;
   cpx* data = t.data();
   for (int i = 0; i < t.m() * t.n() * t.p(); i++) {
-    val += norm(data[i]);
+    val += std::norm(data[i]);
   }
   return val;
 }
