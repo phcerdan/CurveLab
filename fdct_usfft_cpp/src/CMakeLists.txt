@@ -1,3 +1,13 @@
+set(header_files
+    fdct_usfft.hpp
+    fdct_usfft_inc.hpp
+    fdct_usfft_inline.hpp
+    # mexaux.hpp
+    nummat.hpp
+    numvec.hpp
+    offmat.hpp
+    offvec.hpp
+    )
 set(source_files
     fdct_usfft.cpp
     afdct_usfft.cpp
@@ -7,6 +17,10 @@ set(source_files
 
 add_library(fdct_usfft ${source_files})
 target_link_libraries(fdct_usfft FFTW)
+
+install(TARGETS fdct_usfft EXPORT CurveLabTargets DESTINATION ${CurveLab_LIB_INSTALL_DIR})
+install(FILES ${header_files} DESTINATION ${CurveLab_INCLUDE_INSTALL_DIR}/fdct_usfft)
+file(COPY ${header_files} DESTINATION ${PROJECT_BINARY_DIR}/include/fdct_usfft)
 
 if(CurveLab_BUILD_TESTING)
     add_executable(test_fdct_usfft test.cpp)

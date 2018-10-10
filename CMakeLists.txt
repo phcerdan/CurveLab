@@ -14,41 +14,60 @@ set(CurveLab_LIB_INSTALL_DIR lib/ CACHE PATH "LIB_INSTALL_DIR")
 option(CurveLab_BUILD_TESTING "BUILD_TESTING for CurveLab" OFF)
 
 ################# ExternalProject ##################
-include(ExternalProject)
+#CMake files are broken in FFTW3
+#find_package(FFTW3 REQUIRED)
+#Also this project uses FFTW2
 
 message(STATUS "ExternalProject: fftw...")
+include(ExternalProject)
 
-ExternalProject_Add(fftw
+ExternalProject_Add(ep_fftw
     URL http://www.fftw.org/fftw-2.1.5.tar.gz
     # URL http://www.fftw.org/fftw-3.3.8.tar.gz
     PREFIX ${CMAKE_CURRENT_BINARY_DIR}/fftw
     CONFIGURE_COMMAND
-    ${CMAKE_CURRENT_BINARY_DIR}/fftw/src/fftw/configure
+    ${CMAKE_CURRENT_BINARY_DIR}/fftw/src/ep_fftw/configure
     --prefix=${CMAKE_CURRENT_BINARY_DIR}/fftw/install
     INSTALL_DIR ${CMAKE_CURRENT_BINARY_DIR}/fftw/install
     )
 
-add_library(FFTW STATIC IMPORTED)
-set(lib_fftw_name ${CMAKE_STATIC_LIBRARY_PREFIX}fftw${CMAKE_STATIC_LIBRARY_SUFFIX})
-add_dependencies(FFTW fftw)
-set(fftw_install_include_dir ${CMAKE_CURRENT_BINARY_DIR}/fftw/install/include)
-file(MAKE_DIRECTORY ${fftw_install_include_dir})
-set_target_properties(FFTW PROPERTIES
-    IMPORTED_LOCATION ${CMAKE_CURRENT_BINARY_DIR}/fftw/install/lib/${lib_fftw_name}
-    INTERFACE_INCLUDE_DIRECTORIES ${fftw_install_include_dir}
-    )
+# add_library(fftw2 STATIC IMPORTED)
+# set(lib_fftw_name ${CMAKE_STATIC_LIBRARY_PREFIX}fftw${CMAKE_STATIC_LIBRARY_SUFFIX})
+# add_dependencies(fftw ep_fftw)
+
+# set(fftw_install_include_dir ${CMAKE_CURRENT_BINARY_DIR}/fftw/install/include)
+# file(MAKE_DIRECTORY ${fftw_install_include_dir})
+# set_target_properties(fftw PROPERTIES
+#     IMPORTED_LOCATION ${CMAKE_CURRENT_BINARY_DIR}/fftw/install/lib/${lib_fftw_name}
+#     INTERFACE_INCLUDE_DIRECTORIES $<BUILD_INTERFACE:${fftw_install_include_dir}>
+#     # INTERFACE_INCLUDE_DIRECTORIES $<INSTALL_INTERFACE:${CurveLab_INCLUDE_INSTALL_DIR}>
+#     )
+# install(TARGETS fftw EXPORT CurveLabTargets DESTINATION ${CurveLab_LIB_INSTALL_DIR})
+# install(FILES ${fftw_install_include_dir}/fftw.h DESTINATION ${CurveLab_INCLUDE_INSTALL_DIR})
+
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+if("${FFTW2_DIR}" STREQUAL "")
+    set(FFTW2_DIR ${CMAKE_CURRENT_BINARY_DIR}/fftw/install)
+endif()
+message(WARNING "${FFTW2_DIR}")
+find_package(FFTW2 MODULE) # This is required, but we leave it optional to build the ExternalProject
 
 ################# Subdirectories ##################
+
+set(CurveLab_CONFIG_INSTALL_DIR ${CurveLab_LIB_INSTALL_DIR}/CurveLab/cmake)
+set(CurveLab_CONFIG_BUILD_DIR ${CMAKE_CURRENT_BINARY_DIR})
+# Clear Targets.cmake (exported targets are appended to this file from each subdirectory)
+file(WRITE ${CurveLab_CONFIG_BUILD_DIR}/CurveLabTargets.cmake "")
 
 if(CurveLab_BUILD_TESTING)
     enable_testing()
 endif()
-#CMake files are broken in FFTW3
-#find_package(FFTW3 REQUIRED)
 add_subdirectory(fdct3d)
+if(_disable)
 add_subdirectory(fdct_usfft_cpp)
 add_subdirectory(fdct_wrapping_cpp)
 add_subdirectory(fdct3d_outcore)
+endif()
 
 # WIP, PETSc not working
 # Set PETSC_DIR pointing to base directory
@@ -59,16 +78,45 @@ endif()
 
 ################# Config ##################
 include(CMakePackageConfigHelpers)
-configure_package_config_file(
-    CurveLabConfig.cmake.in
-    ${CMAKE_CURRENT_BINARY_DIR}/CurveLabConfig.cmake
-    INSTALL_DESTINATION ${LIB_INSTALL_DIR}/CurveLab/cmake
-    PATH_VARS CurveLab_INCLUDE_INSTALL_DIR)
+
 write_basic_package_version_file(
     ${CMAKE_CURRENT_BINARY_DIR}/CurveLabConfigVersion.cmake
     VERSION ${CurveLab_VERSION}
     COMPATIBILITY SameMajorVersion )
 
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/CurveLabConfig.cmake
-              ${CMAKE_CURRENT_BINARY_DIR}/CurveLabConfigVersion.cmake
-    DESTINATION ${LIB_INSTALL_DIR}/CurveLab/cmake )
+# Config for build time
+set(CurveLab_INCLUDE_BUILD_DIR ${PROJECT_BINARY_DIR}/include)
+set(CurveLab_INCLUDE_DIR ${CurveLab_INCLUDE_BUILD_DIR})
+set(CurveLab_CONFIG_DIR  ${CurveLab_CONFIG_BUILD_DIR})
+set(CurveLab_CMAKE_DIR   ${CMAKE_CURRENT_BINARY_DIR})
+configure_package_config_file(
+    cmake/CurveLabConfig.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/CurveLabConfig.cmake
+    INSTALL_DESTINATION ${PROJECT_BINARY_DIR}
+    PATH_VARS
+    CurveLab_INCLUDE_DIR
+    CurveLab_CONFIG_DIR
+    CurveLab_CMAKE_DIR)
+
+# Configure at install time. Located out of the way from the build tree.
+set(CurveLab_INCLUDE_DIR ${CurveLab_INCLUDE_INSTALL_DIR})
+set(CurveLab_CONFIG_DIR ${CurveLab_CONFIG_INSTALL_DIR})
+configure_package_config_file(
+    cmake/CurveLabConfig.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/CurveLabConfig.cmake
+    INSTALL_DESTINATION ${CurveLab_CONFIG_INSTALL_DIR}
+    PATH_VARS CurveLab_INCLUDE_DIR CurveLab_CONFIG_DIR)
+
+################# Install ##################
+install(
+    FILES ${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/CurveLabConfig.cmake
+    DESTINATION ${CurveLab_CONFIG_INSTALL_DIR})
+install(
+    FILES cmake/FindFFTW2.cmake
+    DESTINATION ${CurveLab_CONFIG_INSTALL_DIR})
+file(COPY cmake/FindFFTW2.cmake
+    DESTINATION ${CurveLab_CONFIG_BUILD_DIR})
+
+install(EXPORT CurveLabTargets
+    NAMESPACE CurveLab::
+    DESTINATION ${CurveLab_CONFIG_INSTALL_DIR})

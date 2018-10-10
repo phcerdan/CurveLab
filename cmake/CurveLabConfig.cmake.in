@@ -1,0 +1,15 @@
+set(CurveLab_VERSION "@CurveLab_VERSION@")
+
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+set_and_check(CurveLab_INCLUDE_DIR "@PACKAGE_CurveLab_INCLUDE_DIR@")
+
+include(@PACKAGE_CurveLab_CONFIG_DIR@/CurveLabTargets.cmake)
+list(APPEND CMAKE_MODULE_PATH @PACKAGE_CurveLab_CMAKE_DIR@)
+if("${FFTW2_DIR}" STREQUAL "")
+  set(FFTW2_DIR @PACKAGE_CurveLab_CMAKE_DIR@/fftw/install)
+endif()
+find_dependency(FFTW2 REQUIRED MODULE)
+
+check_required_components(CurveLab)
