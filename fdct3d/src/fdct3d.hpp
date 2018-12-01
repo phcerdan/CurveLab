@@ -21,22 +21,28 @@ int fdct3d_forward(int N1, int N2, int N3, int nbscales, int nbdstz_coarse,
 //  N1,N2,N3 -- the size of the input data
 //  nbscales -- the total number of scales for subband decomposition
 //  nbdstz_coarse -- the number of discretizations in each direction on each
-//  face in the 2nd coarest scale ac -- ac==1 use curvelet at the finest level,
-//  ac==0, use wavelet at the finest level x -- N1 by N2 by N3 tensor stored in
+//  face in the 2nd coarsest scale
+//  ac -- ac==1 use curvelet at the finest level,
+//  ac==0, use wavelet at the finest level
+//  x -- N1 by N2 by N3 tensor stored in
 //  CpxNumTns class
 // OUTPUTS:
 //  c -- the curvelet coefficients data structure coeffient at scale s, wedge w
 //  and indices (i,j,k) is accessed by c[s][w](i,j,k).
 
-int fdct3d_inverse(int N1, int N2, int N3, int nbscales, int nbdstz_coarse,
-                   int ac, std::vector<std::vector<CpxNumTns> >& c, CpxNumTns& x);
+int fdct3d_inverse(int N1, int N2, int N3,
+    int nbscales, int nbdstz_coarse, int ac,
+    std::vector<std::vector<CpxNumTns> >& c,
+    CpxNumTns& x);
 // this function performs the inverse curvelet transform
 // INPUTS:
 //  N1,N2,N3 -- the size of the input data
 //  nbscales -- the total number of scales for subband decomposition
 //  nbdstz_coarse -- the number of discretizations in each direction on each
-//  face in the 2nd coarest scale ac -- ac==1 use curvelet at the finest level,
-//  ac==0, use wavelet at the finest level c -- the curvelet coefficients data
+//  face in the 2nd coarest scale
+//  ac -- ac==1 use curvelet at the finest level,
+//  ac==0, use wavelet at the finest level
+//  c -- the curvelet coefficients data
 //  structure coeffient at scale s, wedge w and indices (i,j,k) is accessed by
 //  c[s][w](i,j,k).
 // OUTPUTS:

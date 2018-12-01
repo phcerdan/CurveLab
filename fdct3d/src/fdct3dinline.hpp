@@ -61,17 +61,18 @@ inline int fdct3d_window(double x, double& l, double& r) {
 inline int fdct3d_rangecompute(double XL1, double XL2, double XL3, int& XS1,
                                int& XS2, int& XS3, int& XF1, int& XF2, int& XF3,
                                double& XR1, double& XR2, double& XR3) {
-  XS1 = 2 * int(floor(XL1 / 2)) + 1;
-  XS2 = 2 * int(floor(XL2 / 2)) + 1;
-  XS3 = 2 * int(floor(XL3 / 2)) + 1;  // number of samples
+  XR1 = XL1 / 2.0;
+  XR2 = XL2 / 2.0;
+  XR3 = XL3 / 2.0;
 
-  XF1 = int(floor(XL1 / 2));
-  XF2 = int(floor(XL2 / 2));
-  XF3 = int(floor(XL3 / 2));  // offset on either side
+  XF1 = int(floor(XR1));
+  XF2 = int(floor(XR2));
+  XF3 = int(floor(XR3));  // offset on either side
 
-  XR1 = XL1 / 2;
-  XR2 = XL2 / 2;
-  XR3 = XL3 / 2;
+  XS1 = 2 * XF1 + 1;
+  XS2 = 2 * XF2 + 1;
+  XS3 = 2 * XF3 + 1;  // number of samples
+
   return 0;
 }
 
@@ -95,17 +96,18 @@ inline int fdct3d_lowpass(double L1, DblOffVec& lowpass) {
 
 inline int fdct3d_lowpasscompute(double XL1, double XL2, double XL3,
                                  DblOffTns& lowpass) {
-  int XS1 = 2 * int(floor(XL1 / 2)) + 1;
-  int XS2 = 2 * int(floor(XL2 / 2)) + 1;
-  int XS3 = 2 * int(floor(XL3 / 2)) + 1;
-  // number of samples
-  int XF1 = int(floor(XL1 / 2));
-  int XF2 = int(floor(XL2 / 2));
-  int XF3 = int(floor(XL3 / 2));
+  double XR1 = XL1 / 2.0;
+  double XR2 = XL2 / 2.0;
+  double XR3 = XL3 / 2.0;
+
+  int XF1 = int(floor(XR1));
+  int XF2 = int(floor(XR2));
+  int XF3 = int(floor(XR3));
   // offset on either side
-  double XR1 = XL1 / 2;
-  double XR2 = XL2 / 2;
-  double XR3 = XL3 / 2;
+  int XS1 = 2 * XF1 + 1;
+  int XS2 = 2 * XF2 + 1;
+  int XS3 = 2 * XF3 + 1;
+  // number of samples
 
   DblOffVec lowpass1(XS1);
   setvalue(lowpass1, 1.0);

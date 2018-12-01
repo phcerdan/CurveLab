@@ -1016,14 +1016,19 @@ int fdct3d_inverse_center(double L1, double L2, double L3, int s,
   return 0;
 }
 
-int fdct3d_inverse(int N1, int N2, int N3, int nbscales, int nbdstz_coarse,
-                   int ac, std::vector<std::vector<CpxNumTns> >& C, CpxNumTns& X) {
+int fdct3d_inverse(int N1, int N2, int N3,
+    int nbscales, int nbdstz_coarse, int ac,
+    std::vector<std::vector<CpxNumTns> >& C,
+    CpxNumTns& X) {
   // fft
   CpxOffTns O;
+  double L1_const = 4.0 * N1 / 3.0;
+  double L2_const = 4.0 * N2 / 3.0;
+  double L3_const = 4.0 * N3 / 3.0;
   if (ac == 1) {
-    double L1 = 4.0 * N1 / 3.0;
-    double L2 = 4.0 * N2 / 3.0;
-    double L3 = 4.0 * N3 / 3.0;
+    double L1 = L1_const;
+    double L2 = L2_const;
+    double L3 = L3_const;
     int S1, S2, S3;
     int F1, F2, F3;
     double R1, R2, R3;
@@ -1037,37 +1042,42 @@ int fdct3d_inverse(int N1, int N2, int N3, int nbscales, int nbdstz_coarse,
   if (ac == 1) {
     {
       int s = 0;
-      double L1 = 4.0 * N1 / 3.0 / pow2(L - 1 - s);
-      double L2 = 4.0 * N2 / 3.0 / pow2(L - 1 - s);
-      double L3 = 4.0 * N3 / 3.0 / pow2(L - 1 - s);
+      double pow2_coeff = pow2(L - 1 - s);
+      double L1 = L1_const / pow2_coeff;
+      double L2 = L2_const / pow2_coeff;
+      double L3 = L3_const / pow2_coeff;
       fdct3d_inverse_center(L1, L2, L3, s, C, O);
     }
     for (int s = 1; s < L; s++) {
-      double L1 = 4.0 * N1 / 3.0 / pow2(L - 1 - s);
-      double L2 = 4.0 * N2 / 3.0 / pow2(L - 1 - s);
-      double L3 = 4.0 * N3 / 3.0 / pow2(L - 1 - s);
+      double pow2_coeff = pow2(L - 1 - s);
+      double L1 = L1_const / pow2_coeff;
+      double L2 = L2_const / pow2_coeff;
+      double L3 = L3_const / pow2_coeff;
       int nd = nbdstz_coarse * pow2(s / 2);
       fdct3d_inverse_angles(L1, L2, L3, s, nd, C, O);
     }
   } else {
     {
       int s = L - 1;
-      double L1 = 4.0 * N1 / 3.0 / pow2(L - 1 - s);
-      double L2 = 4.0 * N2 / 3.0 / pow2(L - 1 - s);
-      double L3 = 4.0 * N3 / 3.0 / pow2(L - 1 - s);
+      double pow2_coeff = pow2(L - 1 - s);
+      double L1 = L1_const / pow2_coeff;
+      double L2 = L2_const / pow2_coeff;
+      double L3 = L3_const / pow2_coeff;
       fdct3d_inverse_wavelet(L1, L2, L3, s, C, O);
     }
     {
       int s = 0;
-      double L1 = 4.0 * N1 / 3.0 / pow2(L - 1 - s);
-      double L2 = 4.0 * N2 / 3.0 / pow2(L - 1 - s);
-      double L3 = 4.0 * N3 / 3.0 / pow2(L - 1 - s);
+      double pow2_coeff = pow2(L - 1 - s);
+      double L1 = L1_const / pow2_coeff;
+      double L2 = L2_const / pow2_coeff;
+      double L3 = L3_const / pow2_coeff;
       fdct3d_inverse_center(L1, L2, L3, s, C, O);
     }
     for (int s = 1; s < L - 1; s++) {
-      double L1 = 4.0 * N1 / 3.0 / pow2(L - 1 - s);
-      double L2 = 4.0 * N2 / 3.0 / pow2(L - 1 - s);
-      double L3 = 4.0 * N3 / 3.0 / pow2(L - 1 - s);
+      double pow2_coeff = pow2(L - 1 - s);
+      double L1 = L1_const / pow2_coeff;
+      double L2 = L2_const / pow2_coeff;
+      double L3 = L3_const / pow2_coeff;
       int nd = nbdstz_coarse * pow2(s / 2);
       fdct3d_inverse_angles(L1, L2, L3, s, nd, C, O);
     }
@@ -1075,9 +1085,9 @@ int fdct3d_inverse(int N1, int N2, int N3, int nbscales, int nbdstz_coarse,
 
   CpxOffTns F(N1, N2, N3);
   if (ac == 1) {
-    double L1 = 4.0 * N1 / 3.0;
-    double L2 = 4.0 * N2 / 3.0;
-    double L3 = 4.0 * N3 / 3.0;
+    double L1 = L1_const;
+    double L2 = L2_const;
+    double L3 = L3_const;
     int S1, S2, S3;
     int F1, F2, F3;
     double R1, R2, R3;
