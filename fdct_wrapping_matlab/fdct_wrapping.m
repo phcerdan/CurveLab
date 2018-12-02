@@ -33,7 +33,7 @@ function C = fdct_wrapping(x, is_real, finest, nbscales, nbangles_coarse)
 %               'cosine' and 'sine'. For a given scale j, the 'cosine'
 %               coefficients are stored in the first two quadrants (low
 %               values of l), the 'sine' coefficients in the last two
-%               quadrants (high values of l).  
+%               quadrants (high values of l).
 %
 % See also ifdct_wrapping.m, fdct_wrapping_param.m
 %
@@ -85,7 +85,7 @@ if finest == 1,
     scales = nbscales:-1:2;
 
 else
-    
+
     M1 = M1/2;
     M2 = M2/2;
     window_length_1 = floor(2*M1) - floor(M1) - 1;
@@ -105,7 +105,7 @@ else
     Xhi(Xlow_index_1, Xlow_index_2) = Xhi(Xlow_index_1, Xlow_index_2) .* hipass;
     C{nbscales}{1} = fftshift(ifft2(ifftshift(Xhi)))*sqrt(prod(size(Xhi)));
     if is_real, C{nbscales}{1} = real(C{nbscales}{1}); end;
-    
+
     scales = (nbscales-1):-1:2;
 
 end;
@@ -129,7 +129,7 @@ for j = scales,
     Xlow = Xlow(Xlow_index_1, Xlow_index_2);
     Xhi(Xlow_index_1, Xlow_index_2) = Xlow .* hipass;
     Xlow = Xlow .* lowpass;     % size is 2*floor(2*M1)+1 - by - 2*floor(2*M2)+1
-    
+
     % Loop: angular decomposition
     l = 0;
     nbquadrants = 2 + 2*(~is_real);
@@ -149,7 +149,7 @@ for j = scales,
         wedge_endpoints = wedge_ticks(2:2:(end-1));         % integers
         wedge_midpoints = (wedge_endpoints(1:(end-1)) + wedge_endpoints(2:end))/2;
                 % integers or half-integers
-        
+
         % Left corner wedge
         l = l+1;
         first_wedge_endpoint_vert = round(2*floor(4*M_vert)/(2*nbangles_perquad) + 1);
@@ -201,7 +201,7 @@ for j = scales,
                 C{j}{l} = sqrt(2)*real(x);
                 C{j}{l+nbangles(j)/2} = sqrt(2)*imag(x);
         end;
-                
+
         % Regular wedges
         length_wedge = floor(4*M_vert) - floor(M_vert);
         Y = 1:length_wedge;
@@ -220,7 +220,7 @@ for j = scales,
                 new_row = 1 + mod(row - first_row, length_wedge);
                 wrapped_data(new_row,:) = Xhi(row,cols);
                 wrapped_XX(new_row,:) = XX(row,cols);
-                wrapped_YY(new_row,:) = YY(row,cols);             
+                wrapped_YY(new_row,:) = YY(row,cols);
             end;
             slope_wedge_left = ((floor(4*M_horiz)+1) - wedge_midpoints(subl-1))/floor(4*M_vert);
             mid_line_left = wedge_midpoints(subl-1) + slope_wedge_left*(wrapped_YY - 1);

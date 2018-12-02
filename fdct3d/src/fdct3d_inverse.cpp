@@ -1050,7 +1050,7 @@ void shrink_wrap_fft_shifted(const CpxOffTns &O, CpxOffTns &F)
   for (int i = -F1; i < -F1 + S1; i++)
     for (int j = -F2; j < -F2 + S2; j++)
       for (int k = -F3; k < -F3 + S3; k++)
-        F(t1(i), t2(j), t3(k)) += O(i, j, k);
+        F(t1(i), t2(j), t3(k)) = O(i, j, k);
 }
 
 int fdct3d_inverse(int N1, int N2, int N3,
