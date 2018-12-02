@@ -936,8 +936,10 @@ int fdct3d_inverse_angles(double L1, double L2, double L3, int s, int nd,
   return 0;
 }
 
-int fdct3d_inverse_wavelet(double L1, double L2, double L3, int s,
-                           std::vector<std::vector<CpxNumTns> >& C, CpxOffTns& O) {
+int fdct3d_inverse_wavelet(double L1, double L2, double L3,
+    int s,
+    std::vector<std::vector<CpxNumTns> >& C,
+    CpxOffTns& O) {
   std::vector<CpxNumTns>& csc = C[s];
 
   L1 = L1 / 2;
@@ -979,8 +981,10 @@ int fdct3d_inverse_wavelet(double L1, double L2, double L3, int s,
   return 0;
 }
 
-int fdct3d_inverse_center(double L1, double L2, double L3, int s,
-                          std::vector<std::vector<CpxNumTns> >& C, CpxOffTns& O) {
+int fdct3d_inverse_center(double L1, double L2, double L3,
+    int s,
+    std::vector<std::vector<CpxNumTns> >& C,
+    CpxOffTns& O) {
   std::vector<CpxNumTns>& csc = C[s];
 
   int S1, S2, S3;
@@ -1016,19 +1020,52 @@ int fdct3d_inverse_center(double L1, double L2, double L3, int s,
   return 0;
 }
 
+/**
+ * Append to F (size N1,N2,N3) the expanded O (size S1,S2,S3)
+ *
+ * @param O
+ * @param F
+ */
+void shrink_wrap_fft_shifted(const CpxOffTns &O, CpxOffTns &F)
+{
+  const int N1 = F.m();
+  const int N2 = F.n();
+  const int N3 = F.p();
+  const double L1_const = 4.0 * N1 / 3.0;
+  const double L2_const = 4.0 * N2 / 3.0;
+  const double L3_const = 4.0 * N3 / 3.0;
+  const double L1 = L1_const;
+  const double L2 = L2_const;
+  const double L3 = L3_const;
+  int S1, S2, S3; // expanded
+  int F1, F2, F3; // half (int)
+  double R1, R2, R3; // half (double -- unused)
+  fdct3d_rangecompute(L1, L2, L3, S1, S2, S3, F1, F2, F3, R1, R2, R3);
+  assert(O.m() == S1);
+  assert(O.n() == S2);
+  assert(O.p() == S3);
+  IntOffVec t1 = wrap_indices(N1, S1, F1);
+  IntOffVec t2 = wrap_indices(N2, S2, F2);
+  IntOffVec t3 = wrap_indices(N3, S3, F3);
+  for (int i = -F1; i < -F1 + S1; i++)
+    for (int j = -F2; j < -F2 + S2; j++)
+      for (int k = -F3; k < -F3 + S3; k++)
+        F(t1(i), t2(j), t3(k)) += O(i, j, k);
+}
+
 int fdct3d_inverse(int N1, int N2, int N3,
     int nbscales, int nbdstz_coarse, int ac,
     std::vector<std::vector<CpxNumTns> >& C,
     CpxNumTns& X) {
   // fft
   CpxOffTns O;
-  double L1_const = 4.0 * N1 / 3.0;
-  double L2_const = 4.0 * N2 / 3.0;
-  double L3_const = 4.0 * N3 / 3.0;
+  const double L1_const = 4.0 * N1 / 3.0;
+  const double L2_const = 4.0 * N2 / 3.0;
+  const double L3_const = 4.0 * N3 / 3.0;
   if (ac == 1) {
-    double L1 = L1_const;
-    double L2 = L2_const;
-    double L3 = L3_const;
+    const double L1 = L1_const;
+    const double L2 = L2_const;
+    const double L3 = L3_const;
     int S1, S2, S3;
     int F1, F2, F3;
     double R1, R2, R3;
@@ -1041,102 +1078,67 @@ int fdct3d_inverse(int N1, int N2, int N3,
   int L = nbscales;
   if (ac == 1) {
     {
-      int s = 0;
-      double pow2_coeff = pow2(L - 1 - s);
-      double L1 = L1_const / pow2_coeff;
-      double L2 = L2_const / pow2_coeff;
-      double L3 = L3_const / pow2_coeff;
+      const int s = 0;
+      const double pow2_coeff = pow2(L - 1 - s);
+      const double L1 = L1_const / pow2_coeff;
+      const double L2 = L2_const / pow2_coeff;
+      const double L3 = L3_const / pow2_coeff;
       fdct3d_inverse_center(L1, L2, L3, s, C, O);
     }
     for (int s = 1; s < L; s++) {
-      double pow2_coeff = pow2(L - 1 - s);
-      double L1 = L1_const / pow2_coeff;
-      double L2 = L2_const / pow2_coeff;
-      double L3 = L3_const / pow2_coeff;
-      int nd = nbdstz_coarse * pow2(s / 2);
+      const double pow2_coeff = pow2(L - 1 - s);
+      const double L1 = L1_const / pow2_coeff;
+      const double L2 = L2_const / pow2_coeff;
+      const double L3 = L3_const / pow2_coeff;
+      const int nd = nbdstz_coarse * pow2(s / 2);
       fdct3d_inverse_angles(L1, L2, L3, s, nd, C, O);
     }
   } else {
     {
-      int s = L - 1;
-      double pow2_coeff = pow2(L - 1 - s);
-      double L1 = L1_const / pow2_coeff;
-      double L2 = L2_const / pow2_coeff;
-      double L3 = L3_const / pow2_coeff;
+      const int s = L - 1;
+      const double pow2_coeff = pow2(L - 1 - s);
+      const double L1 = L1_const / pow2_coeff;
+      const double L2 = L2_const / pow2_coeff;
+      const double L3 = L3_const / pow2_coeff;
       fdct3d_inverse_wavelet(L1, L2, L3, s, C, O);
     }
     {
-      int s = 0;
-      double pow2_coeff = pow2(L - 1 - s);
-      double L1 = L1_const / pow2_coeff;
-      double L2 = L2_const / pow2_coeff;
-      double L3 = L3_const / pow2_coeff;
+      const int s = 0;
+      const double pow2_coeff = pow2(L - 1 - s);
+      const double L1 = L1_const / pow2_coeff;
+      const double L2 = L2_const / pow2_coeff;
+      const double L3 = L3_const / pow2_coeff;
       fdct3d_inverse_center(L1, L2, L3, s, C, O);
     }
     for (int s = 1; s < L - 1; s++) {
-      double pow2_coeff = pow2(L - 1 - s);
-      double L1 = L1_const / pow2_coeff;
-      double L2 = L2_const / pow2_coeff;
-      double L3 = L3_const / pow2_coeff;
-      int nd = nbdstz_coarse * pow2(s / 2);
+      const double pow2_coeff = pow2(L - 1 - s);
+      const double L1 = L1_const / pow2_coeff;
+      const double L2 = L2_const / pow2_coeff;
+      const double L3 = L3_const / pow2_coeff;
+      const int nd = nbdstz_coarse * pow2(s / 2);
       fdct3d_inverse_angles(L1, L2, L3, s, nd, C, O);
     }
   }
 
   CpxOffTns F(N1, N2, N3);
   if (ac == 1) {
-    double L1 = L1_const;
-    double L2 = L2_const;
-    double L3 = L3_const;
-    int S1, S2, S3;
-    int F1, F2, F3;
-    double R1, R2, R3;
-    fdct3d_rangecompute(L1, L2, L3, S1, S2, S3, F1, F2, F3, R1, R2, R3);
-    IntOffVec t1(S1);
-    for (int i = -F1; i < -F1 + S1; i++)
-      if (i < -N1 / 2)
-        t1(i) = i + int(N1);
-      else if (i > (N1 - 1) / 2)
-        t1(i) = i - int(N1);
-      else
-        t1(i) = i;
-    IntOffVec t2(S2);
-    for (int i = -F2; i < -F2 + S2; i++)
-      if (i < -N2 / 2)
-        t2(i) = i + int(N2);
-      else if (i > (N2 - 1) / 2)
-        t2(i) = i - int(N2);
-      else
-        t2(i) = i;
-    IntOffVec t3(S3);
-    for (int i = -F3; i < -F3 + S3; i++)
-      if (i < -N3 / 2)
-        t3(i) = i + int(N3);
-      else if (i > (N3 - 1) / 2)
-        t3(i) = i - int(N3);
-      else
-        t3(i) = i;
-    O.resize(S1, S2, S3);
-    for (int i = -F1; i < -F1 + S1; i++)
-      for (int j = -F2; j < -F2 + S2; j++)
-        for (int k = -F3; k < -F3 + S3; k++)
-          F(t1(i), t2(j), t3(k)) += O(i, j, k);
+    shrink_wrap_fft_shifted(O, F);
   } else {
     F = O;
   }
 
   // fft
-  CpxNumTns T(N1, N2, N3);
-  fdct3d_ifftshift(N1, N2, N3, F, T);
+  // CpxNumTns T(N1, N2, N3);
+  fdct3d_ifftshift(N1, N2, N3, F, X);
   fftwnd_plan p = fftw3d_create_plan(N3, N2, N1, FFTW_BACKWARD,
                                      FFTW_ESTIMATE | FFTW_IN_PLACE);
-  fftwnd_one(p, (fftw_complex*)T.data(), NULL);
+  fftwnd_one(p, (fftw_complex*)X.data(), NULL);
   fftwnd_destroy_plan(p);
   double sqrtprod = sqrt(double(N1 * N2 * N3));  // scale
   for (int i = 0; i < N1; i++)
     for (int j = 0; j < N2; j++)
-      for (int k = 0; k < N3; k++) T(i, j, k) /= sqrtprod;
-  X = T;
+      for (int k = 0; k < N3; k++) X(i, j, k) /= sqrtprod;
+  // X = T;
 
   return 0;
 }

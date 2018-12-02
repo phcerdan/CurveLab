@@ -509,4 +509,32 @@ inline double energy(CpxNumTns& m) {
   return val;
 }
 
+/*
+ * wrap_indices works as a index wrapping.
+ * The coeff images are computed using
+ * S1 (bigger than N1, the original size), but to compare/mix with other coeffs, we have to go back to the original size (N1).
+ * Example: if N1 = 256, then, from rangecompute, S1 = 341, F1 = 170
+ * t1(x) = x + N1 if x < -N1/2 (< -128).   x = -129 -> t1(x) =  127
+ * t1(x) = x - N1 if x > (N1-1)/2 (> 127). x =  129 -> t1(x) = -127
+ * t1(x) = x if x \in [-N1/2, (N1-1)/2] (\in [-128, 127])
+ *
+ * @param N1 size of the original input
+ * @param S1 expanded size
+ * @param F1 half expanded size (from rangecompute)
+ *
+ * @return t1
+ */
+inline IntOffVec wrap_indices(int N1, int S1, int F1)
+{
+  IntOffVec t1(S1);
+  for (int i = -F1; i < -F1 + S1; i++)
+    if (i < -N1 / 2)
+      t1(i) = i + int(N1);
+    else if (i > (N1 - 1) / 2)
+      t1(i) = i - int(N1);
+    else
+      t1(i) = i;
+  return t1;
+}
+
 #endif
