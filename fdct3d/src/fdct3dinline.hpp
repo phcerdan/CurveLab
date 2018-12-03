@@ -77,8 +77,8 @@ inline int fdct3d_rangecompute(double XL1, double XL2, double XL3, int& XS1,
 }
 
 inline int fdct3d_lowpass(double L1, DblOffVec& lowpass) {
-  int S1 = 2 * int(floor(L1 / 2)) + 1;
   int F1 = int(floor(L1 / 2));
+  int S1 = 2 * F1 + 1;
   double R1 = L1 / 2;
 
   assert(lowpass.m() >= S1);
@@ -535,6 +535,113 @@ inline IntOffVec wrap_indices(int N1, int S1, int F1)
     else
       t1(i) = i;
   return t1;
+}
+
+/**
+ * @param F input, size: N1, N2, N3, is the shifted FFT of input (X) of size N1,N2,N3.
+ * @param O output, size: S1, S2, S3, where S1,S2,S3 comes from rangecompute, which gives the wrapping size.
+ */
+inline void expand_wrap_fft_shifted(const CpxOffTns &F, CpxOffTns &O)
+{
+    const int N1 = F.m();
+    const int N2 = F.n();
+    const int N3 = F.p();
+    const double L1_const = 4.0 * N1 / 3.0;
+    const double L2_const = 4.0 * N2 / 3.0;
+    const double L3_const = 4.0 * N3 / 3.0;
+    const double L1 = L1_const;
+    const double L2 = L2_const;
+    const double L3 = L3_const;
+    int S1, S2, S3; // expanded
+    int F1, F2, F3; // half (int)
+    double R1, R2, R3; // half (double -- unused)
+    fdct3d_rangecompute(L1, L2, L3, S1, S2, S3, F1, F2, F3, R1, R2, R3);
+    // Resize output to the expanded size
+    O.resize(S1, S2, S3);
+    IntOffVec t1 = wrap_indices(N1, S1, F1);
+    IntOffVec t2 = wrap_indices(N2, S2, F2);
+    IntOffVec t3 = wrap_indices(N3, S3, F3);
+    for (int i = -F1; i < -F1 + S1; i++)
+      for (int j = -F2; j < -F2 + S2; j++)
+        for (int k = -F3; k < -F3 + S3; k++)
+          O(i, j, k) = F(t1(i), t2(j), t3(k));
+}
+
+
+/**
+ * Shrink to  F (size N1,N2,N3) the expanded O (size S1,S2,S3)
+ *
+ * @param O
+ * @param F
+ */
+inline void shrink_wrap_fft_shifted(const CpxOffTns &O, CpxOffTns &F)
+{
+  const int N1 = F.m();
+  const int N2 = F.n();
+  const int N3 = F.p();
+  const double L1_const = 4.0 * N1 / 3.0;
+  const double L2_const = 4.0 * N2 / 3.0;
+  const double L3_const = 4.0 * N3 / 3.0;
+  const double L1 = L1_const;
+  const double L2 = L2_const;
+  const double L3 = L3_const;
+  int S1, S2, S3; // expanded
+  int F1, F2, F3; // half (int)
+  double R1, R2, R3; // half (double -- unused)
+  fdct3d_rangecompute(L1, L2, L3, S1, S2, S3, F1, F2, F3, R1, R2, R3);
+  assert(O.m() == S1);
+  assert(O.n() == S2);
+  assert(O.p() == S3);
+  IntOffVec t1 = wrap_indices(N1, S1, F1);
+  IntOffVec t2 = wrap_indices(N2, S2, F2);
+  IntOffVec t3 = wrap_indices(N3, S3, F3);
+  for (int i = -F1; i < -F1 + S1; i++)
+    for (int j = -F2; j < -F2 + S2; j++)
+      for (int k = -F3; k < -F3 + S3; k++)
+        F(t1(i), t2(j), t3(k)) = O(i, j, k);
+}
+
+
+inline CpxOffTns fftshift_to_coeff(int S1, int S2, int S3, const CpxNumTns& coeff) {
+  CpxNumTns T(S1, S2, S3);
+  T = coeff;
+  fftwnd_plan p = fftw3d_create_plan(S3, S2, S1, FFTW_FORWARD,
+                                     FFTW_ESTIMATE | FFTW_IN_PLACE);
+  fftwnd_one(p, (fftw_complex*)T.data(), NULL);
+  fftwnd_destroy_plan(p);
+  double sqrtprod = sqrt(double(S1 * S2 * S3));
+  for (int i = 0; i < S1; i++)
+    for (int j = 0; j < S2; j++)
+      for (int k = 0; k < S3; k++) T(i, j, k) /= sqrtprod;
+
+  CpxOffTns A(S1, S2, S3);
+  fdct3d_fftshift(S1, S2, S3, T, A);
+  return A;
+}
+
+/**
+ * TODO Change name. This is taken from fdct3d_inverse_center
+ * The idea is that we want a common size (big) to compare coefficients.
+ * The size of O should be 4 * N_i / 3.0.
+ * But the coefficients themselves C might have variable sizes.
+ *
+ * @param L1
+ * @param L2
+ * @param L3
+ * @param O
+ * @param
+ */
+inline void homogeneous_size_coeff(double L1, double L2, double L3,
+    const CpxNumTns &C, CpxOffTns &commonSize) {
+  int S1, S2, S3;
+  int F1, F2, F3;
+  double R1, R2, R3;
+  fdct3d_rangecompute(L1, L2, L3, S1, S2, S3, F1, F2, F3, R1, R2, R3);
+  CpxOffTns A = fftshift_to_coeff(S1,S2, S3, C);
+  for (int i = -S1 / 2; i < -S1 / 2 + S1; i++)
+    for (int j = -S2 / 2; j < -S2 / 2 + S2; j++)
+      for (int k = -S3 / 2; k < -S3 / 2 + S3; k++)
+        commonSize(i, j, k) = A(i, j, k);
 }
 
 #endif

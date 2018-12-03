@@ -1024,36 +1024,6 @@ int fdct3d_forward_center(double L1, double L2, double L3, int s, CpxOffTns& O,
   return 0;
 }
 
-/**
- * @param F input, size: N1, N2, N3, is the shifted FFT of input (X) of size N1,N2,N3.
- * @param O output, size: S1, S2, S3, where S1,S2,S3 comes from rangecompute, which gives the wrapping size.
- */
-void expand_wrap_fft_shifted(const CpxOffTns &F, CpxOffTns &O)
-{
-    const int N1 = F.m();
-    const int N2 = F.n();
-    const int N3 = F.p();
-    const double L1_const = 4.0 * N1 / 3.0;
-    const double L2_const = 4.0 * N2 / 3.0;
-    const double L3_const = 4.0 * N3 / 3.0;
-    const double L1 = L1_const;
-    const double L2 = L2_const;
-    const double L3 = L3_const;
-    int S1, S2, S3; // expanded
-    int F1, F2, F3; // half (int)
-    double R1, R2, R3; // half (double -- unused)
-    fdct3d_rangecompute(L1, L2, L3, S1, S2, S3, F1, F2, F3, R1, R2, R3);
-    // Resize output to the expanded size
-    O.resize(S1, S2, S3);
-    IntOffVec t1 = wrap_indices(N1, S1, F1);
-    IntOffVec t2 = wrap_indices(N2, S2, F2);
-    IntOffVec t3 = wrap_indices(N3, S3, F3);
-    for (int i = -F1; i < -F1 + S1; i++)
-      for (int j = -F2; j < -F2 + S2; j++)
-        for (int k = -F3; k < -F3 + S3; k++)
-          O(i, j, k) = F(t1(i), t2(j), t3(k));
-}
-
 //-----------------------------------------------
 int fdct3d_forward(int N1, int N2, int N3, int nbscales, int nbdstz_coarse, int ac,
     CpxNumTns& X,
@@ -1084,33 +1054,15 @@ int fdct3d_forward(int N1, int N2, int N3, int nbscales, int nbdstz_coarse, int 
 
   int L = nbscales;
   C.resize(L);
-  if (ac == 1) {
-    {
-      int s = 0;
-      double pow2_coeff = pow2(L - 1 - s);
-      double L1 = L1_const / pow2_coeff;
-      double L2 = L2_const / pow2_coeff;
-      double L3 = L3_const / pow2_coeff;
-      fdct3d_forward_center(L1, L2, L3, s, O, C);
-      ;
-    }
-    for (int s = 1; s < L; s++) {
-      double pow2_coeff = pow2(L - 1 - s);
-      double L1 = L1_const / pow2_coeff;
-      double L2 = L2_const / pow2_coeff;
-      double L3 = L3_const / pow2_coeff;
-      int nd = nbdstz_coarse * pow2(s / 2);
-      fdct3d_forward_angles(L1, L2, L3, s, nd, O, C);
-    }
-  } else {
-    {
-      int s = 0;
-      double pow2_coeff = pow2(L - 1 - s);
-      double L1 = L1_const / pow2_coeff;
-      double L2 = L2_const / pow2_coeff;
-      double L3 = L3_const / pow2_coeff;
-      fdct3d_forward_center(L1, L2, L3, s, O, C);
-    }
+  { // s = 0
+    int s = 0;
+    double pow2_coeff = pow2(L - 1 - s);
+    double L1 = L1_const / pow2_coeff;
+    double L2 = L2_const / pow2_coeff;
+    double L3 = L3_const / pow2_coeff;
+    fdct3d_forward_center(L1, L2, L3, s, O, C);
+  }
+  { // s in [1, L-1)
     for (int s = 1; s < L - 1; s++) {
       double pow2_coeff = pow2(L - 1 - s);
       double L1 = L1_const / pow2_coeff;
@@ -1119,12 +1071,17 @@ int fdct3d_forward(int N1, int N2, int N3, int nbscales, int nbdstz_coarse, int 
       int nd = nbdstz_coarse * pow2(s / 2);
       fdct3d_forward_angles(L1, L2, L3, s, nd, O, C);
     }
-    {
-      int s = L - 1;
-      double pow2_coeff = pow2(L - 1 - s);
-      double L1 = L1_const / pow2_coeff;
-      double L2 = L2_const / pow2_coeff;
-      double L3 = L3_const / pow2_coeff;
+  }
+  { // s = L-1
+    int s = L - 1;
+    double pow2_coeff = pow2(L - 1 - s);
+    double L1 = L1_const / pow2_coeff;
+    double L2 = L2_const / pow2_coeff;
+    double L3 = L3_const / pow2_coeff;
+    if (ac == 1) {
+      int nd = nbdstz_coarse * pow2(s / 2);
+      fdct3d_forward_angles(L1, L2, L3, s, nd, O, C);
+    } else {
       fdct3d_forward_wavelet(L1, L2, L3, s, O, C);
     }
   }
