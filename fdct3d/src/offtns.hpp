@@ -86,12 +86,12 @@ class OffTns {
     }
   }
   const F& operator()(int i, int j,
-                      int k) const {  // assert( i>=_s && i<_m+_s && j>=_t &&
-                                      // j<_n+_t && k>=_u && k<_p+_u);
+                      int k) const {
+    assert( i>=_s && i<_m+_s && j>=_t && j<_n+_t && k>=_u && k<_p+_u);
     return _data[(i - _s) + (j - _t) * _m + (k - _u) * _m * _n];
   }
-  F& operator()(int i, int j, int k) {  // assert( i>=_s && i<_m+_s && j>=_t &&
-                                        // j<_n+_t && k>=_u && k<_p+_u);
+  F& operator()(int i, int j, int k) {
+    assert( i>=_s && i<_m+_s && j>=_t && j<_n+_t && k>=_u && k<_p+_u);
     return _data[(i - _s) + (j - _t) * _m + (k - _u) * _m * _n];
   }
   int m() const { return _m; }

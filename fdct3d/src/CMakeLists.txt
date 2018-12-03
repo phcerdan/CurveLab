@@ -17,7 +17,7 @@ set(source_files
     )
 
 # Configure
-add_library(fdct3d ${source_files})
+add_library(fdct3d STATIC ${source_files})
 add_dependencies(fdct3d ep_fftw)
 target_link_libraries(fdct3d PUBLIC fftw2)
 

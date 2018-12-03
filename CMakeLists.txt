@@ -50,6 +50,7 @@ if("${FFTW2_DIR}" STREQUAL "")
     set(FFTW2_DIR ${CMAKE_CURRENT_BINARY_DIR}/fftw/install)
 endif()
 message(WARNING "${FFTW2_DIR}")
+# TODO Fix: This requires double run of cmake configuration. Superbuild is not handled well.
 find_package(FFTW2 MODULE) # This is required, but we leave it optional to build the ExternalProject
 
 ################# Subdirectories ##################
