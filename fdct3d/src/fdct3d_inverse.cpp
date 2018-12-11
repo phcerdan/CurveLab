@@ -44,7 +44,7 @@ int fdct3d_inverse_angles(double L1, double L2, double L3, int s, int nd,
 
   typedef std::pair<int, int> intpair;
   typedef std::pair<int, intpair> inttriple;
-  std::map<inttriple, fftwnd_plan> planmap;
+  std::map<inttriple, fftw_plan> planmap;
 
   // face 0: x,y,z
   for (int h = 0; h < nd; h++) {  //(y first z second)
@@ -97,18 +97,23 @@ int fdct3d_inverse_angles(double L1, double L2, double L3, int s, int nd,
       // tpdata = Cblk;
       tpdata = csc[wcnt];
       // fft
-      fftwnd_plan p = NULL;
-      std::map<inttriple, fftwnd_plan>::iterator mit =
+      fftw_plan p = NULL;
+      std::map<inttriple, fftw_plan>::iterator mit =
           planmap.find(inttriple(xn, intpair(yn, zn)));
       if (mit != planmap.end()) {
         p = (*mit).second;
       } else {
-        p = fftw3d_create_plan(zn, yn, xn, FFTW_FORWARD,
-                               FFTW_ESTIMATE | FFTW_IN_PLACE);
+        p = fftw_plan_dft_3d(zn, yn, xn,
+            reinterpret_cast<fftw_complex*>(tpdata.data()),
+			reinterpret_cast<fftw_complex*>(tpdata.data()),
+            FFTW_FORWARD, FFTW_ESTIMATE);
+        // p = fftw3d_create_plan(zn, yn, xn, FFTW_FORWARD,
+        //                        FFTW_ESTIMATE | FFTW_IN_PLACE);
         planmap[inttriple(xn, intpair(yn, zn))] = p;
       }
-      fftwnd_one(p, (fftw_complex*)tpdata.data(),
-                 NULL);  // std::cerr<<"wedge s"<<std::endl;
+      fftw_execute(p);
+      // fftwnd_one(p, (fftw_complex*)tpdata.data(),
+      //            NULL);  // std::cerr<<"wedge s"<<std::endl;
       double sqrtprod = sqrt(double(xn * yn * zn));
       for (int i = 0; i < xn; i++)
         for (int j = 0; j < yn; j++)
@@ -243,18 +248,23 @@ int fdct3d_inverse_angles(double L1, double L2, double L3, int s, int nd,
       // tpdata = Cblk;
       tpdata = csc[wcnt];
       // fft
-      fftwnd_plan p = NULL;
-      std::map<inttriple, fftwnd_plan>::iterator mit =
+      fftw_plan p = NULL;
+      std::map<inttriple, fftw_plan>::iterator mit =
           planmap.find(inttriple(xn, intpair(yn, zn)));
       if (mit != planmap.end()) {
         p = (*mit).second;
       } else {
-        p = fftw3d_create_plan(zn, yn, xn, FFTW_FORWARD,
-                               FFTW_ESTIMATE | FFTW_IN_PLACE);
+        p = fftw_plan_dft_3d(zn, yn, xn,
+            reinterpret_cast<fftw_complex*>(tpdata.data()),
+			reinterpret_cast<fftw_complex*>(tpdata.data()),
+            FFTW_FORWARD, FFTW_ESTIMATE);
+        // p = fftw3d_create_plan(zn, yn, xn, FFTW_FORWARD,
+        //                        FFTW_ESTIMATE | FFTW_IN_PLACE);
         planmap[inttriple(xn, intpair(yn, zn))] = p;
       }
-      fftwnd_one(p, (fftw_complex*)tpdata.data(),
-                 NULL);  // std::cerr<<"wedge s"<<std::endl;
+      fftw_execute(p);
+      // fftwnd_one(p, (fftw_complex*)tpdata.data(),
+      //            NULL);  // std::cerr<<"wedge s"<<std::endl;
       double sqrtprod = sqrt(double(xn * yn * zn));
       for (int i = 0; i < xn; i++)
         for (int j = 0; j < yn; j++)
@@ -391,18 +401,23 @@ int fdct3d_inverse_angles(double L1, double L2, double L3, int s, int nd,
       // tpdata = Cblk;
       tpdata = csc[wcnt];
       // fft
-      fftwnd_plan p = NULL;
-      std::map<inttriple, fftwnd_plan>::iterator mit =
+      fftw_plan p = NULL;
+      std::map<inttriple, fftw_plan>::iterator mit =
           planmap.find(inttriple(xn, intpair(yn, zn)));
       if (mit != planmap.end()) {
         p = (*mit).second;
       } else {
-        p = fftw3d_create_plan(zn, yn, xn, FFTW_FORWARD,
-                               FFTW_ESTIMATE | FFTW_IN_PLACE);
+        p = fftw_plan_dft_3d(zn, yn, xn,
+            reinterpret_cast<fftw_complex*>(tpdata.data()),
+			reinterpret_cast<fftw_complex*>(tpdata.data()),
+            FFTW_FORWARD, FFTW_ESTIMATE);
+        // p = fftw3d_create_plan(zn, yn, xn, FFTW_FORWARD,
+        //                        FFTW_ESTIMATE | FFTW_IN_PLACE);
         planmap[inttriple(xn, intpair(yn, zn))] = p;
       }
-      fftwnd_one(p, (fftw_complex*)tpdata.data(),
-                 NULL);  // std::cerr<<"wedge s"<<std::endl;
+      fftw_execute(p);
+      // fftwnd_one(p, (fftw_complex*)tpdata.data(),
+      //            NULL);  // std::cerr<<"wedge s"<<std::endl;
       double sqrtprod = sqrt(double(xn * yn * zn));
       for (int i = 0; i < xn; i++)
         for (int j = 0; j < yn; j++)
@@ -536,18 +551,23 @@ int fdct3d_inverse_angles(double L1, double L2, double L3, int s, int nd,
       // tpdata = Cblk;
       tpdata = csc[wcnt];
       // fft
-      fftwnd_plan p = NULL;
-      std::map<inttriple, fftwnd_plan>::iterator mit =
+      fftw_plan p = NULL;
+      std::map<inttriple, fftw_plan>::iterator mit =
           planmap.find(inttriple(xn, intpair(yn, zn)));
       if (mit != planmap.end()) {
         p = (*mit).second;
       } else {
-        p = fftw3d_create_plan(zn, yn, xn, FFTW_FORWARD,
-                               FFTW_ESTIMATE | FFTW_IN_PLACE);
+        p = fftw_plan_dft_3d(zn, yn, xn,
+            reinterpret_cast<fftw_complex*>(tpdata.data()),
+			reinterpret_cast<fftw_complex*>(tpdata.data()),
+            FFTW_FORWARD, FFTW_ESTIMATE);
+        // p = fftw3d_create_plan(zn, yn, xn, FFTW_FORWARD,
+        //                        FFTW_ESTIMATE | FFTW_IN_PLACE);
         planmap[inttriple(xn, intpair(yn, zn))] = p;
       }
-      fftwnd_one(p, (fftw_complex*)tpdata.data(),
-                 NULL);  // std::cerr<<"wedge s"<<std::endl;
+      fftw_execute(p);
+      // fftwnd_one(p, (fftw_complex*)tpdata.data(),
+      //            NULL);  // std::cerr<<"wedge s"<<std::endl;
       double sqrtprod = sqrt(double(xn * yn * zn));
       for (int i = 0; i < xn; i++)
         for (int j = 0; j < yn; j++)
@@ -682,18 +702,23 @@ int fdct3d_inverse_angles(double L1, double L2, double L3, int s, int nd,
       // tpdata = Cblk;
       tpdata = csc[wcnt];
       // fft
-      fftwnd_plan p = NULL;
-      std::map<inttriple, fftwnd_plan>::iterator mit =
+      fftw_plan p = NULL;
+      std::map<inttriple, fftw_plan>::iterator mit =
           planmap.find(inttriple(xn, intpair(yn, zn)));
       if (mit != planmap.end()) {
         p = (*mit).second;
       } else {
-        p = fftw3d_create_plan(zn, yn, xn, FFTW_FORWARD,
-                               FFTW_ESTIMATE | FFTW_IN_PLACE);
+        p = fftw_plan_dft_3d(zn, yn, xn,
+            reinterpret_cast<fftw_complex*>(tpdata.data()),
+			reinterpret_cast<fftw_complex*>(tpdata.data()),
+            FFTW_FORWARD, FFTW_ESTIMATE);
+        // p = fftw3d_create_plan(zn, yn, xn, FFTW_FORWARD,
+        //                        FFTW_ESTIMATE | FFTW_IN_PLACE);
         planmap[inttriple(xn, intpair(yn, zn))] = p;
       }
-      fftwnd_one(p, (fftw_complex*)tpdata.data(),
-                 NULL);  // std::cerr<<"wedge s"<<std::endl;
+      fftw_execute(p);
+      // fftwnd_one(p, (fftw_complex*)tpdata.data(),
+      //            NULL);  // std::cerr<<"wedge s"<<std::endl;
       double sqrtprod = sqrt(double(xn * yn * zn));
       for (int i = 0; i < xn; i++)
         for (int j = 0; j < yn; j++)
@@ -829,18 +854,23 @@ int fdct3d_inverse_angles(double L1, double L2, double L3, int s, int nd,
       // tpdata = Cblk;
       tpdata = csc[wcnt];
       // fft
-      fftwnd_plan p = NULL;
-      std::map<inttriple, fftwnd_plan>::iterator mit =
+      fftw_plan p = NULL;
+      std::map<inttriple, fftw_plan>::iterator mit =
           planmap.find(inttriple(xn, intpair(yn, zn)));
       if (mit != planmap.end()) {
         p = (*mit).second;
       } else {
-        p = fftw3d_create_plan(zn, yn, xn, FFTW_FORWARD,
-                               FFTW_ESTIMATE | FFTW_IN_PLACE);
+        p = fftw_plan_dft_3d(zn, yn, xn,
+            reinterpret_cast<fftw_complex*>(tpdata.data()),
+			reinterpret_cast<fftw_complex*>(tpdata.data()),
+            FFTW_FORWARD, FFTW_ESTIMATE);
+        // p = fftw3d_create_plan(zn, yn, xn, FFTW_FORWARD,
+        //                        FFTW_ESTIMATE | FFTW_IN_PLACE);
         planmap[inttriple(xn, intpair(yn, zn))] = p;
       }
-      fftwnd_one(p, (fftw_complex*)tpdata.data(),
-                 NULL);  // std::cerr<<"wedge s"<<std::endl;
+      fftw_execute(p);
+      // fftwnd_one(p, (fftw_complex*)tpdata.data(),
+      //            NULL);  // std::cerr<<"wedge s"<<std::endl;
       double sqrtprod = sqrt(double(xn * yn * zn));
       for (int i = 0; i < xn; i++)
         for (int j = 0; j < yn; j++)
@@ -927,10 +957,10 @@ int fdct3d_inverse_angles(double L1, double L2, double L3, int s, int nd,
   assert(wcnt == nd * nd * nf);
 
   // remove plans
-  for (std::map<inttriple, fftwnd_plan>::iterator mit = planmap.begin();
+  for (std::map<inttriple, fftw_plan>::iterator mit = planmap.begin();
        mit != planmap.end(); mit++) {
-    fftwnd_plan p = (*mit).second;
-    fftwnd_destroy_plan(p);
+    fftw_plan p = (*mit).second;
+    fftw_destroy_plan(p);
   }
 
   return 0;
@@ -1062,10 +1092,15 @@ int fdct3d_inverse(int N1, int N2, int N3,
   // fft
   // CpxNumTns T(N1, N2, N3);
   fdct3d_ifftshift(N1, N2, N3, F, X);
-  fftwnd_plan p = fftw3d_create_plan(N3, N2, N1, FFTW_BACKWARD,
-                                     FFTW_ESTIMATE | FFTW_IN_PLACE);
-  fftwnd_one(p, (fftw_complex*)X.data(), NULL);
-  fftwnd_destroy_plan(p);
+  fftw_plan p = fftw_plan_dft_3d(N3, N2, N1,
+      reinterpret_cast<fftw_complex*>(X.data()),
+	  reinterpret_cast<fftw_complex*>(X.data()),
+      FFTW_BACKWARD, FFTW_ESTIMATE);
+  // fftw_plan p = fftw3d_create_plan(N3, N2, N1, FFTW_BACKWARD,
+  //                                    FFTW_ESTIMATE | FFTW_IN_PLACE);
+  fftw_execute(p);
+  // fftwnd_one(p, (fftw_complex*)X.data(), NULL);
+  fftw_destroy_plan(p);
   double sqrtprod = sqrt(double(N1 * N2 * N3));  // scale
   for (int i = 0; i < N1; i++)
     for (int j = 0; j < N2; j++)

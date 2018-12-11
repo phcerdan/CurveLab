@@ -15,22 +15,22 @@ option(CurveLab_BUILD_TESTING "BUILD_TESTING for CurveLab" OFF)
 
 ################# ExternalProject ##################
 #CMake files are broken in FFTW3
-#find_package(FFTW3 REQUIRED)
-#Also this project uses FFTW2
+# find_package(FFTW3 REQUIRED)
 
 message(STATUS "ExternalProject: fftw...")
 include(ExternalProject)
-
 ExternalProject_Add(ep_fftw
-    URL http://www.fftw.org/fftw-2.1.5.tar.gz
-    # URL http://www.fftw.org/fftw-3.3.8.tar.gz
+    # URL http://www.fftw.org/fftw-2.1.5.tar.gz
+    URL http://www.fftw.org/fftw-3.3.8.tar.gz
     PREFIX ${CMAKE_CURRENT_BINARY_DIR}/fftw
     CONFIGURE_COMMAND
     ${CMAKE_CURRENT_BINARY_DIR}/fftw/src/ep_fftw/configure
     --prefix=${CMAKE_CURRENT_BINARY_DIR}/fftw/install
+    --enable-shared=yes
     INSTALL_DIR ${CMAKE_CURRENT_BINARY_DIR}/fftw/install
     )
 
+##### IGNORE
 # add_library(fftw2 STATIC IMPORTED)
 # set(lib_fftw_name ${CMAKE_STATIC_LIBRARY_PREFIX}fftw${CMAKE_STATIC_LIBRARY_SUFFIX})
 # add_dependencies(fftw ep_fftw)
@@ -46,12 +46,14 @@ ExternalProject_Add(ep_fftw
 # install(FILES ${fftw_install_include_dir}/fftw.h DESTINATION ${CurveLab_INCLUDE_INSTALL_DIR})
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
-if("${FFTW2_DIR}" STREQUAL "")
-    set(FFTW2_DIR ${CMAKE_CURRENT_BINARY_DIR}/fftw/install)
+if("${FFTW3_DIR}" STREQUAL "")
+    set(FFTW3_DIR ${CMAKE_CURRENT_BINARY_DIR}/fftw/install)
 endif()
-message(WARNING "${FFTW2_DIR}")
 # TODO Fix: This requires double run of cmake configuration. Superbuild is not handled well.
-find_package(FFTW2 MODULE) # This is required, but we leave it optional to build the ExternalProject
+find_package(FFTW3 MODULE) # This is required, but we leave it optional to build the ExternalProject
+message(WARNING "FFTW3_DIR: ${FFTW3_DIR}")
+message(STATUS "FFTW3_INCLUDE_DIR: ${FFTW3_INCLUDE_DIR}")
+message(STATUS "FFTW3_LIBRARIES: ${FFTW3_LIBRARIES}")
 
 ################# Subdirectories ##################
 
@@ -113,9 +115,9 @@ install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/CurveLabConfig.cmake
     DESTINATION ${CurveLab_CONFIG_INSTALL_DIR})
 install(
-    FILES cmake/FindFFTW2.cmake
+    FILES cmake/FindFFTW3.cmake
     DESTINATION ${CurveLab_CONFIG_INSTALL_DIR})
-file(COPY cmake/FindFFTW2.cmake
+file(COPY cmake/FindFFTW3.cmake
     DESTINATION ${CurveLab_CONFIG_BUILD_DIR})
 
 install(EXPORT CurveLabTargets
