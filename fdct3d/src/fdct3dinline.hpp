@@ -608,10 +608,15 @@ inline void fftshift_to_coeff(const CpxNumTns& coeff, CpxOffTns & A) {
   const int S3 = coeff.p();
   CpxNumTns T(S1, S2, S3);
   T = coeff;
-  fftwnd_plan p = fftw3d_create_plan(S3, S2, S1, FFTW_FORWARD,
-                                     FFTW_ESTIMATE | FFTW_IN_PLACE);
-  fftwnd_one(p, (fftw_complex*)T.data(), NULL);
-  fftwnd_destroy_plan(p);
+  // fftw_plan p = fftw3d_create_plan(S3, S2, S1, FFTW_FORWARD,
+  //                                    FFTW_ESTIMATE | FFTW_IN_PLACE);
+  // fftwnd_one(p, (fftw_complex*)T.data(), NULL);
+  fftw_plan p = fftw_plan_dft_3d(S3, S2, S1,
+      reinterpret_cast<fftw_complex*>(T.data()),
+	  reinterpret_cast<fftw_complex*>(T.data()),
+      FFTW_FORWARD, FFTW_ESTIMATE);
+  fftw_execute(p);
+  fftw_destroy_plan(p);
   double sqrtprod = sqrt(double(S1 * S2 * S3));
   for (int i = 0; i < S1; i++)
     for (int j = 0; j < S2; j++)

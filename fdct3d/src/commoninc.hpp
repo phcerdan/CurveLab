@@ -26,7 +26,7 @@
 #include <vector>
 
 // FFT stuff
-#include "fftw.h"
+#include "fftw3.h"
 
 // typedef double double;
 typedef std::complex<double> cpx;
