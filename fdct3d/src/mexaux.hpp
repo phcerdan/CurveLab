@@ -48,7 +48,7 @@ inline void cpp2mex(const double& cd, mxArray*& md) {
 
 //----------------------cpxofftns
 inline void mex2cpp(const mxArray*& md, CpxOffTns& cd) {
-  const int* dims = mxGetDimensions(md);
+  const size_t* dims = mxGetDimensions(md);
   int m = dims[0];
   int n = dims[1];
   int p = dims[2];
@@ -93,7 +93,7 @@ inline void cpp2mex(CpxOffTns& cd, mxArray*& md) {
   int t = -n / 2;
   int u = -p / 2;
   int ndim = 3;
-  int dims[3];
+  size_t dims[3];
   dims[0] = m;
   dims[1] = n;
   dims[2] = p;
@@ -114,7 +114,7 @@ inline void cpp2mex(CpxOffTns& cd, mxArray*& md) {
 
 //----------------------cpxnumtns
 inline void mex2cpp(const mxArray*& md, CpxNumTns& cd) {
-  const int* dims = mxGetDimensions(md);
+  const size_t* dims = mxGetDimensions(md);
   int m = dims[0];
   int n = dims[1];
   int p = dims[2];
@@ -153,7 +153,7 @@ inline void cpp2mex(CpxNumTns& cd, mxArray*& md) {
   int n = cd.n();
   int p = cd.p();
   int ndim = 3;
-  int dims[3];
+  size_t dims[3];
   dims[0] = m;
   dims[1] = n;
   dims[2] = p;
