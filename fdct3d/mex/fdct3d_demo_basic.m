@@ -17,7 +17,7 @@ disp(' ');
 % fdct3d_demo_basic.m -- This demo displays a curvelet both in the spatial and frequency domains.
 
 m = 128;  n = 128;  p = 128;
-s = 4;
+s = 2;
 w = 1;
 
 X = zeros(m,n,p);

@@ -185,7 +185,7 @@ int fdct3d_forward_angles(double L1, double L2, double L3, int s, int nd,
       } else {
         p = fftw_plan_dft_3d(zn, yn, xn,
             reinterpret_cast<fftw_complex*>(tpdata.data()),
-			reinterpret_cast<fftw_complex*>(tpdata.data()),
+            reinterpret_cast<fftw_complex*>(tpdata.data()),
             FFTW_BACKWARD, FFTW_ESTIMATE);
         // p = fftw3d_create_plan(zn, yn, xn, FFTW_BACKWARD,
         //                        FFTW_ESTIMATE | FFTW_IN_PLACE);
@@ -334,7 +334,7 @@ int fdct3d_forward_angles(double L1, double L2, double L3, int s, int nd,
       } else {
         p = fftw_plan_dft_3d(zn, yn, xn,
             reinterpret_cast<fftw_complex*>(tpdata.data()),
-			reinterpret_cast<fftw_complex*>(tpdata.data()),
+            reinterpret_cast<fftw_complex*>(tpdata.data()),
             FFTW_BACKWARD, FFTW_ESTIMATE);
         // p = fftw3d_create_plan(zn, yn, xn, FFTW_BACKWARD,
         //                        FFTW_ESTIMATE | FFTW_IN_PLACE);
@@ -483,7 +483,7 @@ int fdct3d_forward_angles(double L1, double L2, double L3, int s, int nd,
       } else {
         p = fftw_plan_dft_3d(zn, yn, xn,
             reinterpret_cast<fftw_complex*>(tpdata.data()),
-			reinterpret_cast<fftw_complex*>(tpdata.data()),
+            reinterpret_cast<fftw_complex*>(tpdata.data()),
             FFTW_BACKWARD, FFTW_ESTIMATE);
         // p = fftw3d_create_plan(zn, yn, xn, FFTW_BACKWARD,
         //                        FFTW_ESTIMATE | FFTW_IN_PLACE);
@@ -631,7 +631,7 @@ int fdct3d_forward_angles(double L1, double L2, double L3, int s, int nd,
       } else {
         p = fftw_plan_dft_3d(zn, yn, xn,
             reinterpret_cast<fftw_complex*>(tpdata.data()),
-			reinterpret_cast<fftw_complex*>(tpdata.data()),
+            reinterpret_cast<fftw_complex*>(tpdata.data()),
             FFTW_BACKWARD, FFTW_ESTIMATE);
         // p = fftw3d_create_plan(zn, yn, xn, FFTW_BACKWARD,
         //                        FFTW_ESTIMATE | FFTW_IN_PLACE);
@@ -781,7 +781,7 @@ int fdct3d_forward_angles(double L1, double L2, double L3, int s, int nd,
       } else {
         p = fftw_plan_dft_3d(zn, yn, xn,
             reinterpret_cast<fftw_complex*>(tpdata.data()),
-			reinterpret_cast<fftw_complex*>(tpdata.data()),
+            reinterpret_cast<fftw_complex*>(tpdata.data()),
             FFTW_BACKWARD, FFTW_ESTIMATE);
         // p = fftw3d_create_plan(zn, yn, xn, FFTW_BACKWARD,
         //                        FFTW_ESTIMATE | FFTW_IN_PLACE);
@@ -930,7 +930,7 @@ int fdct3d_forward_angles(double L1, double L2, double L3, int s, int nd,
       } else {
         p = fftw_plan_dft_3d(zn, yn, xn,
             reinterpret_cast<fftw_complex*>(tpdata.data()),
-			reinterpret_cast<fftw_complex*>(tpdata.data()),
+            reinterpret_cast<fftw_complex*>(tpdata.data()),
             FFTW_BACKWARD, FFTW_ESTIMATE);
         // p = fftw3d_create_plan(zn, yn, xn, FFTW_BACKWARD,
         //                        FFTW_ESTIMATE | FFTW_IN_PLACE);
@@ -1003,7 +1003,7 @@ int fdct3d_forward_wavelet(double L1, double L2, double L3, int s, CpxOffTns& O,
 
   fftw_plan p = fftw_plan_dft_3d(N3, N2, N1,
       reinterpret_cast<fftw_complex*>(T.data()),
-	  reinterpret_cast<fftw_complex*>(T.data()),
+      reinterpret_cast<fftw_complex*>(T.data()),
       FFTW_BACKWARD, FFTW_ESTIMATE);
   fftw_execute(p);
   // fftw_plan p = fftw3d_create_plan(N3, N2, N1, FFTW_BACKWARD,
@@ -1048,7 +1048,7 @@ int fdct3d_forward_center(double L1, double L2, double L3, int s, CpxOffTns& O,
   fdct3d_ifftshift(S1, S2, S3, A, T);
   fftw_plan p = fftw_plan_dft_3d(S3, S2, S1,
       reinterpret_cast<fftw_complex*>(T.data()),
-	  reinterpret_cast<fftw_complex*>(T.data()),
+      reinterpret_cast<fftw_complex*>(T.data()),
       FFTW_BACKWARD, FFTW_ESTIMATE);
   fftw_execute(p);
   // fftw_plan p = fftw3d_create_plan(S3, S2, S1, FFTW_BACKWARD,
@@ -1073,7 +1073,7 @@ int fdct3d_forward(int N1, int N2, int N3, int nbscales, int nbdstz_coarse, int 
   CpxNumTns T(X);
   fftw_plan p = fftw_plan_dft_3d(N3, N2, N1,
       reinterpret_cast<fftw_complex*>(T.data()),
-	  reinterpret_cast<fftw_complex*>(T.data()),
+      reinterpret_cast<fftw_complex*>(T.data()),
       FFTW_FORWARD, FFTW_ESTIMATE);
   fftw_execute(p);
   // fftw_plan p = fftw3d_create_plan(N3, N2, N1, FFTW_FORWARD,

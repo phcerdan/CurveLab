@@ -105,7 +105,7 @@ int fdct3d_inverse_angles(double L1, double L2, double L3, int s, int nd,
       } else {
         p = fftw_plan_dft_3d(zn, yn, xn,
             reinterpret_cast<fftw_complex*>(tpdata.data()),
-			reinterpret_cast<fftw_complex*>(tpdata.data()),
+            reinterpret_cast<fftw_complex*>(tpdata.data()),
             FFTW_FORWARD, FFTW_ESTIMATE);
         // p = fftw3d_create_plan(zn, yn, xn, FFTW_FORWARD,
         //                        FFTW_ESTIMATE | FFTW_IN_PLACE);
@@ -256,7 +256,7 @@ int fdct3d_inverse_angles(double L1, double L2, double L3, int s, int nd,
       } else {
         p = fftw_plan_dft_3d(zn, yn, xn,
             reinterpret_cast<fftw_complex*>(tpdata.data()),
-			reinterpret_cast<fftw_complex*>(tpdata.data()),
+            reinterpret_cast<fftw_complex*>(tpdata.data()),
             FFTW_FORWARD, FFTW_ESTIMATE);
         // p = fftw3d_create_plan(zn, yn, xn, FFTW_FORWARD,
         //                        FFTW_ESTIMATE | FFTW_IN_PLACE);
@@ -409,7 +409,7 @@ int fdct3d_inverse_angles(double L1, double L2, double L3, int s, int nd,
       } else {
         p = fftw_plan_dft_3d(zn, yn, xn,
             reinterpret_cast<fftw_complex*>(tpdata.data()),
-			reinterpret_cast<fftw_complex*>(tpdata.data()),
+            reinterpret_cast<fftw_complex*>(tpdata.data()),
             FFTW_FORWARD, FFTW_ESTIMATE);
         // p = fftw3d_create_plan(zn, yn, xn, FFTW_FORWARD,
         //                        FFTW_ESTIMATE | FFTW_IN_PLACE);
@@ -559,7 +559,7 @@ int fdct3d_inverse_angles(double L1, double L2, double L3, int s, int nd,
       } else {
         p = fftw_plan_dft_3d(zn, yn, xn,
             reinterpret_cast<fftw_complex*>(tpdata.data()),
-			reinterpret_cast<fftw_complex*>(tpdata.data()),
+            reinterpret_cast<fftw_complex*>(tpdata.data()),
             FFTW_FORWARD, FFTW_ESTIMATE);
         // p = fftw3d_create_plan(zn, yn, xn, FFTW_FORWARD,
         //                        FFTW_ESTIMATE | FFTW_IN_PLACE);
@@ -710,7 +710,7 @@ int fdct3d_inverse_angles(double L1, double L2, double L3, int s, int nd,
       } else {
         p = fftw_plan_dft_3d(zn, yn, xn,
             reinterpret_cast<fftw_complex*>(tpdata.data()),
-			reinterpret_cast<fftw_complex*>(tpdata.data()),
+            reinterpret_cast<fftw_complex*>(tpdata.data()),
             FFTW_FORWARD, FFTW_ESTIMATE);
         // p = fftw3d_create_plan(zn, yn, xn, FFTW_FORWARD,
         //                        FFTW_ESTIMATE | FFTW_IN_PLACE);
@@ -862,7 +862,7 @@ int fdct3d_inverse_angles(double L1, double L2, double L3, int s, int nd,
       } else {
         p = fftw_plan_dft_3d(zn, yn, xn,
             reinterpret_cast<fftw_complex*>(tpdata.data()),
-			reinterpret_cast<fftw_complex*>(tpdata.data()),
+            reinterpret_cast<fftw_complex*>(tpdata.data()),
             FFTW_FORWARD, FFTW_ESTIMATE);
         // p = fftw3d_create_plan(zn, yn, xn, FFTW_FORWARD,
         //                        FFTW_ESTIMATE | FFTW_IN_PLACE);
@@ -986,7 +986,10 @@ int fdct3d_inverse_wavelet(double L1, double L2, double L3,
   DblOffVec big3(S3);
   fdct3d_lowpass(L3, big3);
 
-  fftshift_to_coeff(csc[0], O);
+  int N1 = O.m();
+  int N2 = O.n();
+  int N3 = O.p();
+  fftshift_to_coeff(N1, N2, N3, csc[0], O);
 
   for (int i = -S1 / 2; i < -S1 / 2 + S1; i++)
     for (int j = -S2 / 2; j < -S2 / 2 + S2; j++)
@@ -1015,8 +1018,8 @@ int fdct3d_inverse_center(double L1, double L2, double L3,
   DblOffVec big3(S3);
   fdct3d_lowpass(L3, big3);
 
-  CpxOffTns A;
-  fftshift_to_coeff(csc[0], A);
+  CpxOffTns A(S1, S2, S3);
+  fftshift_to_coeff(S1, S2, S3, csc[0], A);
 
   for (int i = -S1 / 2; i < -S1 / 2 + S1; i++)
     for (int j = -S2 / 2; j < -S2 / 2 + S2; j++)
@@ -1094,7 +1097,7 @@ int fdct3d_inverse(int N1, int N2, int N3,
   fdct3d_ifftshift(N1, N2, N3, F, X);
   fftw_plan p = fftw_plan_dft_3d(N3, N2, N1,
       reinterpret_cast<fftw_complex*>(X.data()),
-	  reinterpret_cast<fftw_complex*>(X.data()),
+      reinterpret_cast<fftw_complex*>(X.data()),
       FFTW_BACKWARD, FFTW_ESTIMATE);
   // fftw_plan p = fftw3d_create_plan(N3, N2, N1, FFTW_BACKWARD,
   //                                    FFTW_ESTIMATE | FFTW_IN_PLACE);

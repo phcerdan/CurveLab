@@ -602,10 +602,7 @@ inline void shrink_wrap_fft_shifted(const CpxOffTns &O, CpxOffTns &F)
 }
 
 
-inline void fftshift_to_coeff(const CpxNumTns& coeff, CpxOffTns & A) {
-  const int S1 = coeff.m();
-  const int S2 = coeff.n();
-  const int S3 = coeff.p();
+inline void fftshift_to_coeff(const int S1, const int S2, const int S3, const CpxNumTns& coeff, CpxOffTns & A) {
   CpxNumTns T(S1, S2, S3);
   T = coeff;
   // fftw_plan p = fftw3d_create_plan(S3, S2, S1, FFTW_FORWARD,
@@ -613,7 +610,7 @@ inline void fftshift_to_coeff(const CpxNumTns& coeff, CpxOffTns & A) {
   // fftwnd_one(p, (fftw_complex*)T.data(), NULL);
   fftw_plan p = fftw_plan_dft_3d(S3, S2, S1,
       reinterpret_cast<fftw_complex*>(T.data()),
-	  reinterpret_cast<fftw_complex*>(T.data()),
+      reinterpret_cast<fftw_complex*>(T.data()),
       FFTW_FORWARD, FFTW_ESTIMATE);
   fftw_execute(p);
   fftw_destroy_plan(p);
@@ -622,7 +619,10 @@ inline void fftshift_to_coeff(const CpxNumTns& coeff, CpxOffTns & A) {
     for (int j = 0; j < S2; j++)
       for (int k = 0; k < S3; k++) T(i, j, k) /= sqrtprod;
 
-  A.resize(S1, S2, S3);
+  // A.resize(S1, S2, S3);
+  assert(A.m() == S1);
+  assert(A.n() == S2);
+  assert(A.p() == S3);
   fdct3d_fftshift(S1, S2, S3, T, A);
 }
 
@@ -642,7 +642,7 @@ inline void homogeneous_size_coeff(int S1, int S2, int S3,
     const CpxNumTns &C, CpxOffTns &commonSize) {
   commonSize.resize(S1,S2,S3);
   CpxOffTns A;
-  fftshift_to_coeff(C, A);
+  fftshift_to_coeff(S1, S2, S3, C, A);
   // TODO: A and commonSize have different sizes. This has to fail at some point.
   for (int i = -S1 / 2; i < -S1 / 2 + S1; i++)
     for (int j = -S2 / 2; j < -S2 / 2 + S2; j++)
